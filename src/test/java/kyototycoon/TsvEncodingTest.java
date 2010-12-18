@@ -9,12 +9,12 @@ import java.util.Map;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-public class RawTsvEncodingTest {
-    private RawTsvEncoding dut;
+public class TsvEncodingTest {
+    private TsvEncoding dut;
 
     @Before
     public void beforeEach() {
-        dut = new RawTsvEncoding();
+        dut = new TsvEncoding(null, new RawValueEncoding());
     }
 
     @Test

@@ -24,4 +24,9 @@ public class RemoteDBTest {
         dut.set("key", "value");
         assertThat(dut.get("key"), is("value"));
     }
+
+    @Test public void storeSpecialCharacters() {
+        dut.set("display\tname", "Eungju PARK\n");
+        assertThat(dut.get("display\tname"), is("Eungju PARK\n"));
+    }
 }

@@ -1,0 +1,25 @@
+package kyototycoon;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
+public class RawValueEncodingTest {
+    private RawValueEncoding dut;
+
+    @Before
+    public void beforeEach() {
+        dut = new RawValueEncoding();
+    }
+
+    @Test
+    public void encode() {
+        assertThat(dut.encode("v"), is("v"));
+    }
+
+    @Test public void decode() {
+        assertThat(dut.encode("v"), is("v"));
+    }
+}

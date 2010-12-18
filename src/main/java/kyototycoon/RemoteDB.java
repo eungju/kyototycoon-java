@@ -43,14 +43,23 @@ public class RemoteDB {
     }
 
     Map<String, String> call(String command, Map<String, String> input) {
+        TsvEncoding requestEncoding = TsvEncodingHelper.forEfficiency(input);
         try {
-            ContentExchange exchange = createExchange(command, input);
+            ContentExchange exchange = new ContentExchange(true);
+            exchange.setAddress(new Address(host, port));
+            exchange.setMethod("POST");
+            exchange.setURI("/rpc/" + command);
+            exchange.setVersion(HttpVersions.HTTP_1_1);
+            exchange.setRequestContentType(requestEncoding.contentType);
+            byte[] contentSource = requestEncoding.encode(input);
+            exchange.setRequestHeader("Content-Length", String.valueOf(contentSource.length));
+            exchange.setRequestContentSource(new ByteArrayInputStream(contentSource));
             httpClient.send(exchange);
             exchange.waitForDone();
-            RawTsvEncoding encoding = new RawTsvEncoding();
+            TsvEncoding responseEncoding = TsvEncodingHelper.forContentType(exchange.getResponseFields().getStringField("Content-Type"));
             Map<String, String> output = ImmutableMap.of();
             if (exchange.getResponseFields().getLongField("Content-Length") != 0) {
-                output = encoding.decode(exchange.getResponseContentBytes());
+                output = responseEncoding.decode(exchange.getResponseContentBytes());
             }
             if (exchange.getResponseStatus() != 200) {
                 throw new RuntimeException(output.get("ERROR"));
@@ -61,18 +70,5 @@ public class RemoteDB {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    ContentExchange createExchange(String command, Map<String, String> input) {
-        ContentExchange exchange = new ContentExchange(true);
-        exchange.setAddress(new Address(host, port));
-        exchange.setMethod("POST");
-        exchange.setURI("/rpc/" + command);
-        exchange.setVersion(HttpVersions.HTTP_1_1);
-        exchange.setRequestContentType("text/tab-separated-values");
-        byte[] contentSource = new RawTsvEncoding().encode(input);
-        exchange.setRequestHeader("Content-Length", String.valueOf(contentSource.length));
-        exchange.setRequestContentSource(new ByteArrayInputStream(contentSource));
-        return exchange;
     }
 }
