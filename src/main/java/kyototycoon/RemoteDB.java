@@ -23,7 +23,6 @@ public class RemoteDB {
         httpClient.start();
     }
 
-
     public void destroy() {
         try {
             httpClient.stop();
@@ -40,6 +39,10 @@ public class RemoteDB {
     public String get(String key) {
         Map<String, String> output = call("get", ImmutableMap.of("key", key));
         return output.get("value");
+    }
+
+    public void clear() {
+        call("clear", ImmutableMap.<String, String>of());
     }
 
     Map<String, String> call(String command, Map<String, String> input) {
@@ -61,7 +64,7 @@ public class RemoteDB {
             if (exchange.getResponseFields().getLongField("Content-Length") != 0) {
                 output = responseEncoding.decode(exchange.getResponseContentBytes());
             }
-            if (exchange.getResponseStatus() != 200) {
+            if (exchange.getResponseStatus() != 200 && exchange.getResponseStatus() != 450) {
                 throw new RuntimeException(output.get("ERROR"));
             }
             return output;

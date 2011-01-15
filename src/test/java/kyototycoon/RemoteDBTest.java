@@ -13,11 +13,16 @@ public class RemoteDBTest {
     @Before
     public void beforeEach() throws Exception {
         dut = new RemoteDB("localhost", 1978);
+        dut.clear();
     }
 
     @After
     public void afterEach() {
         dut.destroy();
+    }
+
+    @Test public void getReturnNullWhenTheRecordIsNotExist() {
+        assertThat(dut.get("key"), nullValue());
     }
 
     @Test public void setAndGet() {
