@@ -52,7 +52,7 @@ public class RemoteDB {
         return Long.parseLong(StringTranscoder.INSTANCE.decode(output.get("num")));
     }
 
-    public Double incrementDouble(String key, double num) {
+    public double incrementDouble(String key, double num) {
         Values output = call("increment_double", new Values().put("key", keyTranscoder.encode(key)).put("num", StringTranscoder.INSTANCE.encode(String.valueOf(num))));
         byte[] error = output.get("ERROR");
         if (error != null) {
