@@ -1,6 +1,5 @@
 package kyototycoon;
 
-import com.google.common.collect.ImmutableMap;
 import org.eclipse.jetty.client.Address;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
@@ -8,7 +7,6 @@ import org.eclipse.jetty.http.HttpVersions;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Map;
 
 public class RemoteDB {
     private final HttpClient httpClient;
@@ -32,20 +30,20 @@ public class RemoteDB {
     }
 
     public void set(String key, String value) {
-        call("set", ImmutableMap.of("key", key, "value", value));
+        call("set", new Values().put("key", key).put("value", value));
     }
 
 
     public String get(String key) {
-        Map<String, String> output = call("get", ImmutableMap.of("key", key));
+        Values output = call("get", new Values().put("key", key));
         return output.get("value");
     }
 
     public void clear() {
-        call("clear", ImmutableMap.<String, String>of());
+        call("clear", new Values());
     }
 
-    Map<String, String> call(String command, Map<String, String> input) {
+    Values call(String command, Values input) {
         TsvEncoding requestEncoding = TsvEncodingHelper.forEfficiency(input);
         try {
             ContentExchange exchange = new ContentExchange(true);
@@ -60,7 +58,7 @@ public class RemoteDB {
             httpClient.send(exchange);
             exchange.waitForDone();
             TsvEncoding responseEncoding = TsvEncodingHelper.forContentType(exchange.getResponseFields().getStringField("Content-Type"));
-            Map<String, String> output = ImmutableMap.of();
+            Values output = new Values();
             if (exchange.getResponseFields().getLongField("Content-Length") != 0) {
                 output = responseEncoding.decode(exchange.getResponseContentBytes());
             }

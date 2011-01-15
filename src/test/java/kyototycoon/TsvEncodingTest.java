@@ -1,6 +1,5 @@
 package kyototycoon;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,22 +18,22 @@ public class TsvEncodingTest {
 
     @Test
     public void encode() {
-        byte[] encoded = dut.encode(ImmutableMap.of("key", "value"));
+        byte[] encoded = dut.encode(new Values().put("key", "value"));
         assertThat(encoded, is("key\tvalue\r\n".getBytes()));
     }
 
     @Test public void decode() {
-        Map<String, String> decoded = dut.decode("key\tvalue\r\n".getBytes());
-        assertThat(decoded, is((Map) ImmutableMap.of("key", "value")));
+        Values decoded = dut.decode("key\tvalue\r\n".getBytes());
+        assertThat(decoded, is(new Values().put("key", "value")));
     }
 
     @Test public void decode_a_line_ends_with_just_newline() {
-        Map<String, String> decoded = dut.decode("key\tvalue\n".getBytes());
-        assertThat(decoded, is((Map) ImmutableMap.of("key", "value")));
+        Values decoded = dut.decode("key\tvalue\n".getBytes());
+        assertThat(decoded, is(new Values().put("key", "value")));
     }
 
     @Test public void decode_a_line_without_eol() {
-        Map<String, String> decoded = dut.decode("key\tvalue".getBytes());
-        assertThat(decoded, is((Map) ImmutableMap.of("key", "value")));
+        Values decoded = dut.decode("key\tvalue".getBytes());
+        assertThat(decoded, is(new Values().put("key", "value")));
     }
 }

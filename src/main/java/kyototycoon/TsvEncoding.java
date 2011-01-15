@@ -1,7 +1,5 @@
 package kyototycoon;
 
-import com.google.common.collect.ImmutableMap;
-
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
@@ -14,11 +12,11 @@ public class TsvEncoding {
         this.valueEncoding = valueEncoding;
     }
 
-    public byte[] encode(Map<String, String> input) {
+    public byte[] encode(Values input) {
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             TsvWriter writer = new TsvWriter(buffer);
-            for (Map.Entry<String, String> each : input.entrySet()) {
+            for (Map.Entry<String, String> each : input) {
                 writer.writeKey(valueEncoding.encode(each.getKey()));
                 writer.writeTab();
                 writer.writeValue(valueEncoding.encode(each.getValue()));
@@ -30,9 +28,9 @@ public class TsvEncoding {
         }
     }
 
-    public Map<String, String> decode(byte[] input) {
+    public Values decode(byte[] input) {
         try {
-            ImmutableMap.Builder<String, String> result = new ImmutableMap.Builder<String, String>();
+            Values result = new Values();
             TsvReader reader = new TsvReader(input);
             while (reader.hasRemaining()) {
                 String key = valueEncoding.decode(reader.readKey());
@@ -41,7 +39,7 @@ public class TsvEncoding {
                 reader.readEol();
                 result.put(key, value);
             }
-            return result.build();
+            return result;
         } catch (Exception e) {
             throw new RuntimeException("Error while decode " + input);
         }
