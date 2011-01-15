@@ -10,16 +10,16 @@ public class TsvWriter {
         this.output = output;
     }
 
-    public void writeKey(String key) throws IOException {
-        output.write(key.getBytes());
+    public void writeKey(byte[] key) throws IOException {
+        output.write(key);
     }
 
     public void writeTab() throws IOException {
         output.write('\t');
     }
 
-    public void writeValue(String value) throws IOException {
-        output.write(value.getBytes());
+    public void writeValue(byte[] value) throws IOException {
+        output.write(value);
     }
     
     public void writeEol() throws IOException {

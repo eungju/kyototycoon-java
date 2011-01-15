@@ -22,7 +22,7 @@ public class TsvWriterTest {
 
     @Test
     public void writeKey() throws IOException {
-        dut.writeKey("key");
+        dut.writeKey("key".getBytes());
         assertThat(output.toByteArray(), is("key".getBytes()));
     }
 
@@ -34,7 +34,7 @@ public class TsvWriterTest {
 
     @Test
     public void writeValue() throws IOException {
-        dut.writeKey("value");
+        dut.writeKey("value".getBytes());
         assertThat(output.toByteArray(), is("value".getBytes()));
     }
 

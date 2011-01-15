@@ -13,24 +13,28 @@ public class TsvReader {
         return pos < input.length;
     }
 
-    public String readKey() {
+    public byte[] readKey() {
         int s = pos;
         while (input[pos] != '\t') {
             pos++;
         }
-        return new String(input, s, pos - s);
+        byte[] buffer = new byte[pos - s];
+        System.arraycopy(input, s, buffer, 0, buffer.length);
+        return buffer;
     }
 
     public void readTab() {
         pos++;
     }
 
-    public String readValue() {
+    public byte[] readValue() {
         int s = pos;
         while (pos < input.length && !isEolChar(input[pos])) {
             pos++;
         }
-        return new String(input, s, pos - s);
+        byte[] buffer = new byte[pos - s];
+        System.arraycopy(input, s, buffer, 0, buffer.length);
+        return buffer;
     }
 
     public void readEol() {

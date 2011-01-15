@@ -16,10 +16,10 @@ public class RawValueEncodingTest {
 
     @Test
     public void encode() {
-        assertThat(dut.encode("v"), is("v"));
+        assertThat(dut.encode("v".getBytes()), is("v".getBytes()));
     }
 
     @Test public void decode() {
-        assertThat(dut.encode("v"), is("v"));
+        assertThat(dut.encode("v".getBytes()), is("v".getBytes()));
     }
 }

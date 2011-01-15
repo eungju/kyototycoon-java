@@ -1,11 +1,11 @@
 package kyototycoon;
 
 public class RawValueEncoding implements ValueEncoding {
-    public String encode(String value) {
+    public byte[] encode(byte[] value) {
         return value;
     }
 
-    public String decode(String value) {
+    public byte[] decode(byte[] value) {
         return value;
     }
 }

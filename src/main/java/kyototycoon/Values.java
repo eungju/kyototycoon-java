@@ -1,22 +1,23 @@
 package kyototycoon;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Values implements Iterable<Map.Entry<String, String>> {
-    private final Map<String, String> container = new HashMap<String, String>();
+public class Values implements Iterable<Map.Entry<String, byte[]>> {
+    private final Map<String, byte[]> container = new HashMap<String, byte[]>();
 
-    public Values put(String key, String value) {
+    public Values put(String key, byte[] value) {
         container.put(key, value);
         return this;
     }
     
-    public String get(String key) {
+    public byte[] get(String key) {
         return container.get(key);
     }
 
-    public Iterator<Map.Entry<String, String>> iterator() {
+    public Iterator<Map.Entry<String, byte[]>> iterator() {
         return container.entrySet().iterator();
     }
 
@@ -27,7 +28,11 @@ public class Values implements Iterable<Map.Entry<String, String>> {
 
         Values values = (Values) o;
 
-        if (!container.equals(values.container)) return false;
+        for (String each : container.keySet()) {
+            if (!Arrays.equals(get(each), (values.get(each)))) {
+                return false;
+            }
+        }
 
         return true;
     }

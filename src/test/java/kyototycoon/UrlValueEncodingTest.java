@@ -18,10 +18,10 @@ public class UrlValueEncodingTest {
 
     @Test
     public void encode() throws IOException {
-        assertThat(dut.encode("display name"), is("display+name"));
+        assertThat(dut.encode("display name".getBytes()), is("display+name".getBytes()));
     }
 
     @Test public void decode() throws IOException {
-        assertThat(dut.decode("display+name"), is("display name"));
+        assertThat(dut.decode("display+name".getBytes()), is("display name".getBytes()));
     }
 }

@@ -27,11 +27,11 @@ public class RemoteDBTest {
 
     @Test public void setAndGet() {
         dut.set("key", "value");
-        assertThat(dut.get("key"), is("value"));
+        assertThat(dut.get("key"), is((Object) "value"));
     }
 
     @Test public void storeSpecialCharacters() {
         dut.set("display\tname", "Eungju PARK\n");
-        assertThat(dut.get("display\tname"), is("Eungju PARK\n"));
+        assertThat(dut.get("display\tname"), is((Object) "Eungju PARK\n"));
     }
 }

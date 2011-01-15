@@ -15,7 +15,7 @@ public class TsvReaderTest {
     }
 
     @Test public void readKey() {
-        assertThat(new TsvReader("key\t".getBytes()).readKey(), is("key"));
+        assertThat(new TsvReader("key\t".getBytes()).readKey(), is("key".getBytes()));
     }
 
     @Test public void readTab() {
@@ -25,7 +25,7 @@ public class TsvReaderTest {
     }
 
     @Test public void readValue() {
-        assertThat(new TsvReader("value\r\n".getBytes()).readValue(), is("value"));
+        assertThat(new TsvReader("value\r\n".getBytes()).readValue(), is("value".getBytes()));
     }
 
     @Test public void readEol() {

@@ -16,15 +16,15 @@ public class TsvEncoding {
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             TsvWriter writer = new TsvWriter(buffer);
-            for (Map.Entry<String, String> each : input) {
-                writer.writeKey(valueEncoding.encode(each.getKey()));
+            for (Map.Entry<String, byte[]> each : input) {
+                writer.writeKey(valueEncoding.encode(each.getKey().getBytes()));
                 writer.writeTab();
                 writer.writeValue(valueEncoding.encode(each.getValue()));
                 writer.writeEol();
             }
             return buffer.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException("Error while encode " + input);
+            throw new RuntimeException("Error while encode " + input, e);
         }
     }
 
@@ -33,15 +33,15 @@ public class TsvEncoding {
             Values result = new Values();
             TsvReader reader = new TsvReader(input);
             while (reader.hasRemaining()) {
-                String key = valueEncoding.decode(reader.readKey());
+                String key = new String(valueEncoding.decode(reader.readKey()));
                 reader.readTab();
-                String value = valueEncoding.decode(reader.readValue());
+                byte[] value = valueEncoding.decode(reader.readValue());
                 reader.readEol();
                 result.put(key, value);
             }
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("Error while decode " + input);
+            throw new RuntimeException("Error while decode " + input, e);
         }
     }
 }
