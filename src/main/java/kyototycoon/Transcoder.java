@@ -1,7 +1,7 @@
 package kyototycoon;
 
-public interface Transcoder {
-    byte[] encode(Object decoded);
+public interface Transcoder<T> {
+    byte[] encode(T decoded);
 
-    Object decode(byte[] encoded);
+    T decode(byte[] encoded);
 }

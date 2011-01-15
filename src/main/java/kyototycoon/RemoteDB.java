@@ -29,7 +29,7 @@ public class RemoteDB {
         }
     }
 
-    public void set(String key, String value) {
+    public void set(String key, Object value) {
         call("set", new Values().put("key", keyTranscoder.encode(key)).put("value", valueTranscoder.encode(value)));
     }
 
@@ -41,6 +41,24 @@ public class RemoteDB {
 
     public void clear() {
         call("clear", new Values());
+    }
+
+    public long increment(String key, long num) {
+        Values output = call("increment", new Values().put("key", keyTranscoder.encode(key)).put("num", StringTranscoder.INSTANCE.encode(String.valueOf(num))));
+        byte[] error = output.get("ERROR");
+        if (error != null) {
+            throw new IllegalArgumentException(StringTranscoder.INSTANCE.decode(error));
+        }
+        return Long.parseLong(StringTranscoder.INSTANCE.decode(output.get("num")));
+    }
+
+    public Double incrementDouble(String key, double num) {
+        Values output = call("increment_double", new Values().put("key", keyTranscoder.encode(key)).put("num", StringTranscoder.INSTANCE.encode(String.valueOf(num))));
+        byte[] error = output.get("ERROR");
+        if (error != null) {
+            throw new IllegalArgumentException(StringTranscoder.INSTANCE.decode(error));
+        }
+        return Double.parseDouble(StringTranscoder.INSTANCE.decode(output.get("num")));
     }
 
     Values call(String command, Values input) {
@@ -65,7 +83,7 @@ public class RemoteDB {
                 output = new Values();
             }
             if (exchange.getResponseStatus() != 200 && exchange.getResponseStatus() != 450) {
-                throw new RuntimeException((String) StringTranscoder.INSTANCE.decode(output.get("ERROR")));
+                throw new RuntimeException(StringTranscoder.INSTANCE.decode(output.get("ERROR")));
             }
             return output;
         } catch (InterruptedException e) {
