@@ -20,4 +20,9 @@ public class TsvEncodingHelperTest {
     public void detectUrlEncoding() {
         assertThat(TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=U").valueEncoding, is(UrlValueEncoding.class));
     }
+
+    @Test
+    public void detectBase64Encoding() {
+        assertThat(TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=B").valueEncoding, is(Base64ValueEncoding.class));
+    }
 }

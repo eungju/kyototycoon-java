@@ -36,7 +36,6 @@
 	</licenses>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>
@@ -133,6 +132,9 @@
 				<groupId>undercover</groupId>
 				<artifactId>undercover-maven-plugin</artifactId>
 				<configuration>
+                    <excludes>
+                        <exclude>util/Base64</exclude>
+                    </excludes>
 					<formats>
 						<format>html</format>
 						<format>coberturaxml</format>
