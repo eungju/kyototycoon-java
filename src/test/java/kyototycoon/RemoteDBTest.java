@@ -39,7 +39,7 @@ public class RemoteDBTest {
         assertThat(dut.increment("count", 1L), is(1L));
     }
 
-    @Test(expected=IllegalArgumentException.class) public void incrementStringValue() {
+    @Test(expected=RuntimeException.class) public void incrementStringValue() {
         dut.set("count", "3");
         assertThat(dut.increment("count", 4L), is(7L));
     }
@@ -48,7 +48,7 @@ public class RemoteDBTest {
         assertThat(dut.incrementDouble("count", 0.1D), is(0.1D));
     }
 
-    @Test(expected=IllegalArgumentException.class) public void incrementDoubleStringValue() {
+    @Test(expected=RuntimeException.class) public void incrementDoubleStringValue() {
         dut.set("count", "0.3");
         assertThat(dut.incrementDouble("count", 0.4D), is(0.7D));
     }
