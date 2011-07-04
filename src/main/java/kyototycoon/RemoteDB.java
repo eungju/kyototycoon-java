@@ -11,6 +11,7 @@ import java.io.IOException;
 public class RemoteDB {
     private final HttpClient httpClient;
     private final Address address;
+    private final StringTranscoder stringTranscoder = StringTranscoder.INSTANCE;
     private Transcoder keyTranscoder = StringTranscoder.INSTANCE;
     private Transcoder valueTranscoder = StringTranscoder.INSTANCE;
 
@@ -44,21 +45,22 @@ public class RemoteDB {
     }
 
     public long increment(String key, long num) {
-        Values output = call("increment", new Values().put("key", keyTranscoder.encode(key)).put("num", StringTranscoder.INSTANCE.encode(String.valueOf(num))));
-        byte[] error = output.get("ERROR");
-        if (error != null) {
-            throw new IllegalArgumentException(StringTranscoder.INSTANCE.decode(error));
-        }
-        return Long.parseLong(StringTranscoder.INSTANCE.decode(output.get("num")));
+        Values output = call("increment", new Values().put("key", keyTranscoder.encode(key)).put("num", stringTranscoder.encode(String.valueOf(num))));
+        checkError(output);
+        return Long.parseLong(stringTranscoder.decode(output.get("num")));
     }
 
     public double incrementDouble(String key, double num) {
-        Values output = call("increment_double", new Values().put("key", keyTranscoder.encode(key)).put("num", StringTranscoder.INSTANCE.encode(String.valueOf(num))));
+        Values output = call("increment_double", new Values().put("key", keyTranscoder.encode(key)).put("num", stringTranscoder.encode(String.valueOf(num))));
+        checkError(output);
+        return Double.parseDouble(stringTranscoder.decode(output.get("num")));
+    }
+
+    void checkError(Values output) {
         byte[] error = output.get("ERROR");
         if (error != null) {
-            throw new IllegalArgumentException(StringTranscoder.INSTANCE.decode(error));
+            throw new RuntimeException(stringTranscoder.decode(error));
         }
-        return Double.parseDouble(StringTranscoder.INSTANCE.decode(output.get("num")));
     }
 
     Values call(String command, Values input) {
@@ -83,7 +85,7 @@ public class RemoteDB {
                 output = new Values();
             }
             if (exchange.getResponseStatus() != 200 && exchange.getResponseStatus() != 450) {
-                throw new RuntimeException(StringTranscoder.INSTANCE.decode(output.get("ERROR")));
+                throw new RuntimeException(stringTranscoder.decode(output.get("ERROR")));
             }
             return output;
         } catch (InterruptedException e) {
