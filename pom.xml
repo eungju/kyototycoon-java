@@ -40,13 +40,13 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>
-			<version>7.2.1.v20101111</version>
+			<version>7.4.3.v20110701</version>
 		</dependency>
 
         <dependency>
-            <groupId>com.google.collections</groupId>
-            <artifactId>google-collections</artifactId>
-            <version>1.0</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>r09</version>
         </dependency>
         <dependency>
 			<groupId>org.slf4j</groupId>
@@ -55,7 +55,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>runtime</scope>
 			<optional>true</optional>
@@ -194,7 +194,7 @@
 		<maven.compiler.encoding>utf-8</maven.compiler.encoding>
 		<maven.compiler.target>1.5</maven.compiler.target>
 		<maven.compiler.source>1.5</maven.compiler.source>
-        <slf4j.version>1.5.6</slf4j.version>
+        <slf4j.version>1.6.1</slf4j.version>
 		<jmock.version>2.5.1</jmock.version>
 	</properties>
 
