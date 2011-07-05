@@ -25,4 +25,9 @@ public class TsvEncodingHelperTest {
     public void detectBase64Encoding() {
         assertThat(TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=B").valueEncoding, is(Base64ValueEncoding.class));
     }
+
+    @Test
+    public void detectQuotedPrintableEncoding() {
+        assertThat(TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=Q").valueEncoding, is(QuotedPrintableValueEncoding.class));
+    }
 }
