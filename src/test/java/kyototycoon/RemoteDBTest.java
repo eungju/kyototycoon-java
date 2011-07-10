@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URI;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -12,13 +14,13 @@ public class RemoteDBTest {
 
     @Before
     public void beforeEach() throws Exception {
-        dut = new RemoteDB("localhost", 1978);
+        dut = new RemoteDB(new URI[] { URI.create("http://localhost:1978") });
         dut.clear();
     }
 
     @After
     public void afterEach() {
-        dut.destroy();
+        dut.close();
     }
 
     @Test public void getReturnNullWhenTheRecordIsNotExist() {

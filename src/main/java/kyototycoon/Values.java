@@ -41,4 +41,9 @@ public class Values implements Iterable<Map.Entry<String, byte[]>> {
     public int hashCode() {
         return container.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return container.toString();
+    }
 }
