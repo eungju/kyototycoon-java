@@ -1,6 +1,6 @@
 package kyototycoon.networking;
 
-import kyototycoon.Values;
+import kyototycoon.tsv.Values;
 
 import java.net.URI;
 

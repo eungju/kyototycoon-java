@@ -1,6 +1,6 @@
 package kyototycoon.benchmark;
 
-import kyototycoon.Values;
+import kyototycoon.tsv.Values;
 import kyototycoon.networking.netty.NettyNetworking;
 
 import java.net.URI;
@@ -13,8 +13,8 @@ public class NettyNetworkingBenchmark {
         db.initialize(new URI[] { URI.create("http://localhost:1978") });
         db.start();
         final Values input = new Values();
-        input.put("key", "1234567890".getBytes());
-        input.put("value", "1234567890".getBytes());
+        input.put("key".getBytes(), "1234567890".getBytes());
+        input.put("value".getBytes(), "1234567890".getBytes());
 		Runnable task = new Runnable() {
 			public void run() {
                 assertEquals(input, db.call("echo", input));

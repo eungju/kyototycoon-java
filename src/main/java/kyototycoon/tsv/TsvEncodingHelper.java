@@ -1,7 +1,5 @@
 package kyototycoon.tsv;
 
-import kyototycoon.Values;
-
 public class TsvEncodingHelper {
     private static final TsvEncoding BASE64_TSV_ENCODING = new TsvEncoding("text/tab-separated-values; colenc=B", new Base64ValueEncoding());
     private static final TsvEncoding QUOTED_PRINTABLE_TSV_ENCODING = new TsvEncoding("text/tab-separated-values; colenc=Q", new QuotedPrintableValueEncoding());

@@ -1,6 +1,6 @@
 package kyototycoon.networking;
 
-import kyototycoon.Values;
+import kyototycoon.tsv.Values;
 
 public interface Node {
     Values call(String procedure, Values input);

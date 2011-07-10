@@ -1,9 +1,6 @@
 package kyototycoon.tsv;
 
-import kyototycoon.Values;
-
 import java.io.ByteArrayOutputStream;
-import java.util.Map;
 
 public class TsvEncoding {
     public final String contentType;
@@ -18,10 +15,10 @@ public class TsvEncoding {
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             TsvWriter writer = new TsvWriter(buffer);
-            for (Map.Entry<String, byte[]> each : input) {
-                writer.writeKey(valueEncoding.encode(each.getKey().getBytes()));
+            for (KeyValuePair each : input) {
+                writer.writeKey(valueEncoding.encode(each.key));
                 writer.writeTab();
-                writer.writeValue(valueEncoding.encode(each.getValue()));
+                writer.writeValue(valueEncoding.encode(each.value));
                 writer.writeEol();
             }
             return buffer.toByteArray();
@@ -35,7 +32,7 @@ public class TsvEncoding {
             Values result = new Values();
             TsvReader reader = new TsvReader(input);
             while (reader.hasRemaining()) {
-                String key = new String(valueEncoding.decode(reader.readKey()));
+                byte[] key = valueEncoding.decode(reader.readKey());
                 reader.readTab();
                 byte[] value = valueEncoding.decode(reader.readValue());
                 reader.readEol();

@@ -2,7 +2,7 @@ package kyototycoon.networking.netty;
 
 import kyototycoon.tsv.TsvEncoding;
 import kyototycoon.tsv.TsvEncodingHelper;
-import kyototycoon.Values;
+import kyototycoon.tsv.Values;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelHandlerContext;

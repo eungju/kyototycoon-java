@@ -1,7 +1,7 @@
 package kyototycoon.networking.jetty;
 
 import kyototycoon.networking.Networking;
-import kyototycoon.Values;
+import kyototycoon.tsv.Values;
 import org.eclipse.jetty.client.HttpClient;
 
 import java.net.URI;

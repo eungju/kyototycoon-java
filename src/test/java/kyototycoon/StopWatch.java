@@ -1,4 +1,4 @@
-package kyototycoon.benchmark;
+package kyototycoon;
 
 public class StopWatch {
     private long startedAt;

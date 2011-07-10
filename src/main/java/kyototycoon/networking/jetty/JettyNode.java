@@ -1,7 +1,7 @@
 package kyototycoon.networking.jetty;
 
 import kyototycoon.transcoder.StringTranscoder;
-import kyototycoon.Values;
+import kyototycoon.tsv.Values;
 import kyototycoon.networking.Node;
 import kyototycoon.tsv.TsvEncoding;
 import kyototycoon.tsv.TsvEncodingHelper;
@@ -43,7 +43,7 @@ public class JettyNode implements Node {
                 output = new Values();
             }
             if (exchange.getResponseStatus() != 200 && exchange.getResponseStatus() != 450) {
-                throw new RuntimeException(stringTranscoder.decode(output.get("ERROR")));
+                throw new RuntimeException(stringTranscoder.decode(output.get("ERROR".getBytes())));
             }
             return output;
         } catch (InterruptedException e) {

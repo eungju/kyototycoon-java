@@ -1,6 +1,6 @@
 package kyototycoon.networking.netty;
 
-import kyototycoon.Values;
+import kyototycoon.tsv.Values;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ public class NettyNetworkingTest {
     @Test
     public void callEcho() throws Exception {
         Values input = new Values();
-        input.put("k1", "v1".getBytes());
+        input.put("k1".getBytes(), "v1".getBytes());
         assertThat(dut.call("echo", input), is(input));
     }
 }

@@ -1,6 +1,7 @@
 package kyototycoon.benchmark;
 
 import kyototycoon.RemoteDB;
+import kyototycoon.StopWatch;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

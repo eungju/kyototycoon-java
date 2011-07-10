@@ -1,6 +1,6 @@
 package kyototycoon.networking.netty;
 
-import kyototycoon.Values;
+import kyototycoon.tsv.Values;
 
 public class TsvRpcResponse {
     public final Values output;
