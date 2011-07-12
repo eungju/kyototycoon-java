@@ -1,4 +1,4 @@
-package kyototycoon.networking.netty;
+package kyototycoon.tsv;
 
 import kyototycoon.tsv.Values;
 

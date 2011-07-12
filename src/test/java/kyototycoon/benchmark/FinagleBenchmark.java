@@ -1,16 +1,17 @@
 package kyototycoon.benchmark;
 
+import kyototycoon.FinagleKyotoTycoonClient;
 import kyototycoon.tsv.Values;
-import kyototycoon.networking.jetty.JettyNetworking;
 
 import java.net.URI;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class JettyNetworkingBenchmark {
+public class FinagleBenchmark {
 	public static void main(String[] args) throws Exception {
-		final JettyNetworking db = new JettyNetworking();
-        db.initialize(new URI[] { URI.create("http://localhost:1978") });
+		final FinagleKyotoTycoonClient db = new FinagleKyotoTycoonClient();
+        db.setHosts(Arrays.asList(URI.create("http://localhost:1978")));
         db.start();
         final Values input = new Values();
         input.put("key".getBytes(), "1234567890".getBytes());

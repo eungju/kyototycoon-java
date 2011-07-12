@@ -1,10 +1,8 @@
-package kyototycoon.tsv;
+package kyototycoon;
 
-public interface TsvRpcClient {
+public interface KyotoTycoonClient {
     byte[] KEY = "key".getBytes();
     byte[] VALUE = "value".getBytes();
     byte[] NUM = "num".getBytes();
     byte[] ERROR = "ERROR".getBytes();
-
-    Values call(String procedure, Values input);
 }

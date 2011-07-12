@@ -36,7 +36,7 @@ public class PerformanceTest {
         final int n = 1000;
         watch.start();
         for (int i = 0; i < n; i++) {
-		    dut.get("key");
+		    assertThat((String) dut.get("key"), is("value"));
         }
         watch.stop();
         logger.info("Elapsed: {}", watch.elapsed());
@@ -51,7 +51,7 @@ public class PerformanceTest {
         final int n = 1000;
         watch.start();
         for (int i = 0; i < n; i++) {
-            dut.increment("hit", 1);
+            assertThat(dut.increment("hit", 1), is(i + 1L));
         }
         watch.stop();
         logger.info("Elapsed: {}", watch.elapsed());

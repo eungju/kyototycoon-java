@@ -1,22 +1,21 @@
 package kyototycoon;
 
 import kyototycoon.networking.Networking;
-import kyototycoon.networking.jetty.JettyNetworking;
+import kyototycoon.networking.netty.NettyNetworking;
 import kyototycoon.transcoder.StringTranscoder;
 import kyototycoon.transcoder.Transcoder;
-import kyototycoon.tsv.TsvRpcClient;
 import kyototycoon.tsv.Values;
 
 import java.net.URI;
 
-public class RemoteDB implements TsvRpcClient {
+public class RemoteDB implements KyotoTycoonClient {
     private final Networking networking;
     private final StringTranscoder stringTranscoder = StringTranscoder.INSTANCE;
     private Transcoder keyTranscoder = StringTranscoder.INSTANCE;
     private Transcoder valueTranscoder = StringTranscoder.INSTANCE;
 
     public RemoteDB(URI[] addresses) throws Exception {
-        networking = new JettyNetworking();
+        networking = new NettyNetworking();
         networking.initialize(addresses);
         networking.start();
     }
@@ -29,32 +28,28 @@ public class RemoteDB implements TsvRpcClient {
         valueTranscoder = transcoder;
     }
 
-    public Values call(String procedure, Values input) {
-        return networking.call(procedure, input);
-    }
-
     public void set(String key, Object value) {
-        call("set", new Values().put(KEY, keyTranscoder.encode(key)).put(VALUE, valueTranscoder.encode(value)));
+        networking.call("set", new Values().put(KEY, keyTranscoder.encode(key)).put(VALUE, valueTranscoder.encode(value)));
     }
 
     public Object get(String key) {
-        Values output = call("get", new Values().put(KEY, keyTranscoder.encode(key)));
+        Values output = networking.call("get", new Values().put(KEY, keyTranscoder.encode(key)));
         byte[] value = output.get(VALUE);
         return value == null ? null : valueTranscoder.decode(value);
     }
 
     public void clear() {
-        call("clear", new Values());
+        networking.call("clear", new Values());
     }
 
     public long increment(String key, long num) {
-        Values output = call("increment", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num))));
+        Values output = networking.call("increment", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num))));
         checkError(output);
         return Long.parseLong(stringTranscoder.decode(output.get(NUM)));
     }
 
     public double incrementDouble(String key, double num) {
-        Values output = call("increment_double", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num))));
+        Values output = networking.call("increment_double", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num))));
         checkError(output);
         return Double.parseDouble(stringTranscoder.decode(output.get(NUM)));
     }

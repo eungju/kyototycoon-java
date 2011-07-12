@@ -1,5 +1,8 @@
 package kyototycoon.networking.netty;
 
+import kyototycoon.tsv.TsvRpcRequest;
+import kyototycoon.tsv.TsvRpcResponse;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 

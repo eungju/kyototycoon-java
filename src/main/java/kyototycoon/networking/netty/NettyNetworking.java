@@ -1,19 +1,17 @@
 package kyototycoon.networking.netty;
 
+import kyototycoon.networking.Networking;
 import kyototycoon.tsv.Values;
 import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.concurrent.Executors;
 
-public class NettyNetworking {
+public class NettyNetworking implements Networking {
     private ClientBootstrap bootstrap;
     private URI[] addresses;
-    private Channel channel;
+    private NettyNode[] nodes;
 
     public NettyNetworking() {
         bootstrap = new ClientBootstrap(
@@ -28,19 +26,23 @@ public class NettyNetworking {
     }
 
     public void start() {
-        URI address = addresses[0];
-        ChannelFuture future = bootstrap.connect(new InetSocketAddress(address.getHost(), address.getPort()));
-        channel = future.awaitUninterruptibly().getChannel();
+        nodes = new NettyNode[addresses.length];
+        for (int i = 0; i < nodes.length; i++) {
+            NettyNode node = new NettyNode(bootstrap);
+            node.initialize(addresses[i]);
+            node.start();
+            nodes[i] = node;
+        }
     }
 
     public void stop() {
-        channel.close();
+        for (NettyNode node : nodes) {
+            node.stop();
+        }
         bootstrap.releaseExternalResources();
     }
 
     public Values call(String procedure, Values input) {
-        TsvRpcCall call = new TsvRpcCall(new TsvRpcRequest(procedure, input));
-        channel.write(call);
-        return call.awaitUninterruptibly().response.output;
+        return nodes[0].call(procedure, input);
     }
 }
