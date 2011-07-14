@@ -1,4 +1,4 @@
-package kyototycoon.networking.netty;
+package kyototycoon.netty;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;

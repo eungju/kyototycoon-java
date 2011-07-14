@@ -1,4 +1,4 @@
-package kyototycoon.networking.netty;
+package kyototycoon.netty;
 
 import kyototycoon.tsv.TsvEncoding;
 import kyototycoon.tsv.TsvEncodingHelper;

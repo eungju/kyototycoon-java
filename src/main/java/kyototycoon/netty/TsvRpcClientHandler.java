@@ -1,4 +1,4 @@
-package kyototycoon.networking.netty;
+package kyototycoon.netty;
 
 import kyototycoon.tsv.TsvRpcResponse;
 import org.jboss.netty.channel.ChannelHandlerContext;

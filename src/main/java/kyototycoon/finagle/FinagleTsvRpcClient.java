@@ -1,4 +1,4 @@
-package kyototycoon;
+package kyototycoon.finagle;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -9,19 +9,21 @@ import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.http.Http;
 import com.twitter.util.Duration;
 import com.twitter.util.Future;
-import kyototycoon.networking.netty.TsvRpcClientCodec;
+import kyototycoon.TsvRpcClient;
+import kyototycoon.TsvRpcConnection;
+import kyototycoon.netty.TsvRpcClientCodec;
 import kyototycoon.tsv.TsvRpcRequest;
 import kyototycoon.tsv.TsvRpcResponse;
-import kyototycoon.tsv.Values;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-public class FinagleKyotoTycoonClient {
+public class FinagleTsvRpcClient implements TsvRpcClient {
     private Iterable<URI> addresses;
     private ServiceFactory<HttpRequest, HttpResponse> serviceFactory;
+    private Service<HttpRequest, HttpResponse> service;
 
     public void setHosts(Iterable<URI> addresses) {
         this.addresses = addresses;
@@ -43,31 +45,20 @@ public class FinagleKyotoTycoonClient {
                         //.reportTo(new OstrichStatsReceiver())
                         //.logger(Logger.getLogger("http"));
         serviceFactory = ClientBuilder.safeBuildFactory(builder);
+        service = serviceFactory.service();
     }
 
     public void stop() {
         serviceFactory.close();
     }
 
-    public Values call(String procedure, Values input) {
-        Future<HttpResponse> future = serviceFactory.service().apply(TsvRpcClientCodec.encodeRequest(new TsvRpcRequest(procedure, input)));
+    public TsvRpcResponse call(TsvRpcRequest request) {
+        Future<HttpResponse> future = service.apply(TsvRpcClientCodec.encodeRequest(request));
         TsvRpcResponse response = TsvRpcClientCodec.decodeResponse(future.apply());
-        return response.output;
+        return response;
     }
 
-    public KyotoTycoonConnection getConnection() {
-        return new KyotoTycoonConnection() {
-            private final Service<HttpRequest, HttpResponse> service = serviceFactory.make().apply();
-
-            public Values call(String procedure, Values input) {
-                Future<HttpResponse> future = service.apply(TsvRpcClientCodec.encodeRequest(new TsvRpcRequest(procedure, input)));
-                TsvRpcResponse response = TsvRpcClientCodec.decodeResponse(future.apply());
-                return response.output;
-            }
-
-            public void close() {
-                service.release();
-            }
-        };
+    public TsvRpcConnection getConnection() {
+        return new FinagleTsvRpcConnection(serviceFactory.make().apply());
     }
 }

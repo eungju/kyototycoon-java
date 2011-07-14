@@ -58,6 +58,11 @@
             <artifactId>finagle-core</artifactId>
             <version>1.7.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>finagle-example</artifactId>
+            <version>1.7.0</version>
+        </dependency>
 
         <dependency>
 			<groupId>org.slf4j</groupId>

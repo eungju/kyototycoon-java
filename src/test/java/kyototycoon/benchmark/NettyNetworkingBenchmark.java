@@ -1,7 +1,7 @@
 package kyototycoon.benchmark;
 
+import kyototycoon.netty.NettyNetworking;
 import kyototycoon.tsv.Values;
-import kyototycoon.networking.netty.NettyNetworking;
 
 import java.net.URI;
 

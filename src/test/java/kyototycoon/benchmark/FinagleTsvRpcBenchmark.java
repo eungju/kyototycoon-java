@@ -1,6 +1,8 @@
 package kyototycoon.benchmark;
 
-import kyototycoon.FinagleKyotoTycoonClient;
+import kyototycoon.finagle.FinagleTsvRpcClient;
+import kyototycoon.tsv.TsvRpcRequest;
+import kyototycoon.tsv.TsvRpcResponse;
 import kyototycoon.tsv.Values;
 
 import java.net.URI;
@@ -8,17 +10,19 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class FinagleBenchmark {
+public class FinagleTsvRpcBenchmark {
 	public static void main(String[] args) throws Exception {
-		final FinagleKyotoTycoonClient db = new FinagleKyotoTycoonClient();
+		final FinagleTsvRpcClient db = new FinagleTsvRpcClient();
         db.setHosts(Arrays.asList(URI.create("http://localhost:1978")));
         db.start();
         final Values input = new Values();
         input.put("key".getBytes(), "1234567890".getBytes());
         input.put("value".getBytes(), "1234567890".getBytes());
+        final TsvRpcRequest request = new TsvRpcRequest("echo", input);
+        final TsvRpcResponse response = new TsvRpcResponse(200, request.input);
 		Runnable task = new Runnable() {
 			public void run() {
-                assertEquals(input, db.call("echo", input));
+                assertEquals(response.output, db.call(request).output);
 			}
 		};
 		for (int c : new int[] { 1, 10, 100, 200, 300 }) {

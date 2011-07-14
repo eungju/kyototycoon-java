@@ -1,6 +1,5 @@
-package kyototycoon.networking.netty;
+package kyototycoon.netty;
 
-import kyototycoon.networking.Networking;
 import kyototycoon.tsv.Values;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -8,7 +7,7 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import java.net.URI;
 import java.util.concurrent.Executors;
 
-public class NettyNetworking implements Networking {
+public class NettyNetworking {
     private ClientBootstrap bootstrap;
     private URI[] addresses;
     private NettyNode[] nodes;

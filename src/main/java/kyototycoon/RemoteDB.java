@@ -1,27 +1,28 @@
 package kyototycoon;
 
-import kyototycoon.networking.Networking;
-import kyototycoon.networking.netty.NettyNetworking;
+import com.google.common.collect.ImmutableList;
+import kyototycoon.finagle.FinagleTsvRpcClient;
 import kyototycoon.transcoder.StringTranscoder;
 import kyototycoon.transcoder.Transcoder;
+import kyototycoon.tsv.TsvRpcRequest;
 import kyototycoon.tsv.Values;
 
 import java.net.URI;
 
 public class RemoteDB implements KyotoTycoonClient {
-    private final Networking networking;
+    private final TsvRpcClient client;
     private final StringTranscoder stringTranscoder = StringTranscoder.INSTANCE;
     private Transcoder keyTranscoder = StringTranscoder.INSTANCE;
     private Transcoder valueTranscoder = StringTranscoder.INSTANCE;
 
     public RemoteDB(URI[] addresses) throws Exception {
-        networking = new NettyNetworking();
-        networking.initialize(addresses);
-        networking.start();
+        client = new FinagleTsvRpcClient();
+        client.setHosts(ImmutableList.copyOf(addresses));
+        client.start();
     }
 
     public void close() {
-        networking.stop();
+        client.stop();
     }
 
     public void setValueTranscoder(Transcoder transcoder) {
@@ -29,27 +30,27 @@ public class RemoteDB implements KyotoTycoonClient {
     }
 
     public void set(String key, Object value) {
-        networking.call("set", new Values().put(KEY, keyTranscoder.encode(key)).put(VALUE, valueTranscoder.encode(value)));
+        client.call(new TsvRpcRequest("set", new Values().put(KEY, keyTranscoder.encode(key)).put(VALUE, valueTranscoder.encode(value))));
     }
 
     public Object get(String key) {
-        Values output = networking.call("get", new Values().put(KEY, keyTranscoder.encode(key)));
+        Values output = client.call(new TsvRpcRequest("get", new Values().put(KEY, keyTranscoder.encode(key)))).output;
         byte[] value = output.get(VALUE);
         return value == null ? null : valueTranscoder.decode(value);
     }
 
     public void clear() {
-        networking.call("clear", new Values());
+        client.call(new TsvRpcRequest("clear", new Values()));
     }
 
     public long increment(String key, long num) {
-        Values output = networking.call("increment", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num))));
+        Values output = client.call(new TsvRpcRequest("increment", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num))))).output;
         checkError(output);
         return Long.parseLong(stringTranscoder.decode(output.get(NUM)));
     }
 
     public double incrementDouble(String key, double num) {
-        Values output = networking.call("increment_double", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num))));
+        Values output = client.call(new TsvRpcRequest("increment_double", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num))))).output;
         checkError(output);
         return Double.parseDouble(stringTranscoder.decode(output.get(NUM)));
     }

@@ -1,4 +1,4 @@
-package kyototycoon.networking.netty;
+package kyototycoon.netty;
 
 import kyototycoon.tsv.Values;
 import org.jboss.netty.bootstrap.ClientBootstrap;

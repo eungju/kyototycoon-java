@@ -1,5 +1,6 @@
-package kyototycoon.networking.netty;
+package kyototycoon.netty;
 
+import kyototycoon.netty.NettyTsvRpcConnection;
 import kyototycoon.tsv.Values;
 import org.junit.Test;
 
