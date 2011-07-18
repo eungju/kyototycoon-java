@@ -1,8 +1,5 @@
 package kyototycoon.finagle;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 import com.twitter.finagle.ServiceFactory;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.util.Duration;
@@ -26,14 +23,14 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     }
 
     public void start() {
-        String hosts = Joiner.on(",").join(Iterables.transform(addresses, new Function<URI, String>() {
-            public String apply(URI input) {
-                return input.getHost() + ":" + input.getPort();
-            }
-        }));
+        StringBuilder hosts = new StringBuilder();
+        for (URI address : addresses) {
+            hosts.append(',');
+            hosts.append(address.getHost()).append(':').append(address.getPort());
+        }
         ClientBuilder builder = ClientBuilder.get()
                         .codec(new FinagleTsvRpcCodec())
-                        .hosts(hosts)
+                        .hosts(hosts.substring(1))
                         .hostConnectionLimit(100)
                         .connectionTimeout(Duration.fromTimeUnit(1, TimeUnit.SECONDS))
                         .requestTimeout(Duration.fromTimeUnit(1, TimeUnit.SECONDS));

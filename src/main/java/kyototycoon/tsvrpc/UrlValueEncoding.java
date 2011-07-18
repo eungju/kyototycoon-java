@@ -1,14 +1,12 @@
 package kyototycoon.tsvrpc;
 
-import com.google.common.base.Charsets;
-
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
 public class UrlValueEncoding implements ValueEncoding {
-    private Charset encoding = Charsets.UTF_8;
+    private Charset encoding = Charset.forName("UTF-8");
 
     public byte[] encode(byte[] value) throws IOException {
         //FIXME
