@@ -1,6 +1,6 @@
 package kyototycoon.netty;
 
-import kyototycoon.tsv.TsvRpcResponse;
+import kyototycoon.tsvrpc.TsvRpcResponse;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.MessageEvent;

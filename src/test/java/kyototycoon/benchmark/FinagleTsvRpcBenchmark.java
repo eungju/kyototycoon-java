@@ -1,11 +1,11 @@
 package kyototycoon.benchmark;
 
+import kyototycoon.KyotoTycoonFixture;
 import kyototycoon.finagle.FinagleTsvRpcClient;
-import kyototycoon.tsv.TsvRpcRequest;
-import kyototycoon.tsv.TsvRpcResponse;
-import kyototycoon.tsv.Values;
+import kyototycoon.tsvrpc.TsvRpcRequest;
+import kyototycoon.tsvrpc.TsvRpcResponse;
+import kyototycoon.tsvrpc.Values;
 
-import java.net.URI;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class FinagleTsvRpcBenchmark {
 	public static void main(String[] args) throws Exception {
 		final FinagleTsvRpcClient db = new FinagleTsvRpcClient();
-        db.setHosts(Arrays.asList(URI.create("http://localhost:1978")));
+        db.setHosts(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
         db.start();
         final Values input = new Values();
         input.put("key".getBytes(), "1234567890".getBytes());

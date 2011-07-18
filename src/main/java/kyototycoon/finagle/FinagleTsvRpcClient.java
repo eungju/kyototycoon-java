@@ -3,27 +3,23 @@ package kyototycoon.finagle;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
-import com.twitter.finagle.Service;
 import com.twitter.finagle.ServiceFactory;
 import com.twitter.finagle.builder.ClientBuilder;
-import com.twitter.finagle.http.Http;
 import com.twitter.util.Duration;
-import com.twitter.util.Future;
-import kyototycoon.TsvRpcClient;
-import kyototycoon.TsvRpcConnection;
-import kyototycoon.netty.TsvRpcClientCodec;
-import kyototycoon.tsv.TsvRpcRequest;
-import kyototycoon.tsv.TsvRpcResponse;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
+import kyototycoon.tsvrpc.TsvRpcClient;
+import kyototycoon.tsvrpc.TsvRpcConnection;
+import kyototycoon.tsvrpc.TsvRpcRequest;
+import kyototycoon.tsvrpc.TsvRpcResponse;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-public class FinagleTsvRpcClient implements TsvRpcClient {
+/**
+ * TODO: Lifecycle?
+ */
+public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     private Iterable<URI> addresses;
-    private ServiceFactory<HttpRequest, HttpResponse> serviceFactory;
-    private Service<HttpRequest, HttpResponse> service;
+    private ServiceFactory<TsvRpcRequest, TsvRpcResponse> serviceFactory;
 
     public void setHosts(Iterable<URI> addresses) {
         this.addresses = addresses;
@@ -36,7 +32,7 @@ public class FinagleTsvRpcClient implements TsvRpcClient {
             }
         }));
         ClientBuilder builder = ClientBuilder.get()
-                        .codec(Http.get())
+                        .codec(new FinagleTsvRpcCodec())
                         .hosts(hosts)
                         .hostConnectionLimit(100)
                         .connectionTimeout(Duration.fromTimeUnit(1, TimeUnit.SECONDS))
@@ -50,12 +46,6 @@ public class FinagleTsvRpcClient implements TsvRpcClient {
 
     public void stop() {
         serviceFactory.close();
-    }
-
-    public TsvRpcResponse call(TsvRpcRequest request) {
-        Future<HttpResponse> future = service.apply(TsvRpcClientCodec.encodeRequest(request));
-        TsvRpcResponse response = TsvRpcClientCodec.decodeResponse(future.apply());
-        return response;
     }
 
     public TsvRpcConnection getConnection() {

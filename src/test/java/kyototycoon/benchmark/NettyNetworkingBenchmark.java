@@ -1,23 +1,28 @@
 package kyototycoon.benchmark;
 
-import kyototycoon.netty.NettyNetworking;
-import kyototycoon.tsv.Values;
+import kyototycoon.KyotoTycoonFixture;
+import kyototycoon.netty.NettyTsvRpcClient;
+import kyototycoon.tsvrpc.TsvRpcRequest;
+import kyototycoon.tsvrpc.TsvRpcResponse;
+import kyototycoon.tsvrpc.Values;
 
-import java.net.URI;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
 public class NettyNetworkingBenchmark {
 	public static void main(String[] args) throws Exception {
-		final NettyNetworking db = new NettyNetworking();
-        db.initialize(new URI[] { URI.create("http://localhost:1978") });
+		final NettyTsvRpcClient db = new NettyTsvRpcClient();
+        db.setHosts(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
         db.start();
         final Values input = new Values();
         input.put("key".getBytes(), "1234567890".getBytes());
         input.put("value".getBytes(), "1234567890".getBytes());
+        final TsvRpcRequest request = new TsvRpcRequest("echo", input);
+        final TsvRpcResponse response = new TsvRpcResponse(200, request.input);
 		Runnable task = new Runnable() {
 			public void run() {
-                assertEquals(input, db.call("echo", input));
+                assertEquals(input, db.call(request).output);
 			}
 		};
 		for (int c : new int[] { 1, 10, 100, 200, 300 }) {

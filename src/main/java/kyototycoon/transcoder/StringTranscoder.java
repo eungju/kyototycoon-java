@@ -7,7 +7,7 @@ public class StringTranscoder implements Transcoder<String> {
     public static final StringTranscoder INSTANCE = new StringTranscoder();
 
     public byte[] encode(String decoded) {
-        return ((String) decoded).getBytes(encoding);
+        return decoded.getBytes(encoding);
     }
 
     public String decode(byte[] encoded) {
