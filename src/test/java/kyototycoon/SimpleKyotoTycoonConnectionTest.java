@@ -7,14 +7,14 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Before;
 import org.junit.Test;
 
-public class KyotoTycoonConnectionTest {
+public class SimpleKyotoTycoonConnectionTest {
     Mockery mockery = new JUnit4Mockery();
-    KyotoTycoonConnection dut;
+    SimpleKyotoTycoonConnection dut;
     TsvRpcConnection underlying;
 
     @Before public void beforeEach() {
         underlying = mockery.mock(TsvRpcConnection.class);
-        dut = new KyotoTycoonConnection(underlying);
+        dut = new SimpleKyotoTycoonConnection(underlying);
     }
     
     @Test public void

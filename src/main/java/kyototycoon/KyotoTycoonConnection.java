@@ -1,19 +1,14 @@
 package kyototycoon;
 
-import kyototycoon.tsvrpc.TsvRpcConnection;
+public interface KyotoTycoonConnection extends KyotoTycoonRpc {
+    void close();
 
-/**
- * TODO: Extract interface?
- */
-public class KyotoTycoonConnection extends KyotoTycoonRpc {
-    private final TsvRpcConnection connection;
-
-    public KyotoTycoonConnection(TsvRpcConnection connection) {
-        this.connection = connection;
-        tsvRpc = connection;
-    }
-
-    public void close() {
-        connection.close();
-    }
+    // Common arguments
+    //CUR
+    //WAIT
+    //WAITTIME
+    //SIGNAL
+    //SIGNALBROAD
+    
+    // Cursor operations
 }

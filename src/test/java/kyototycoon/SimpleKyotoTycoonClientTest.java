@@ -14,15 +14,15 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 @RunWith(JMock.class)
-public class KyotoTycoonClientTest {
+public class SimpleKyotoTycoonClientTest {
     Mockery mockery = new JUnit4Mockery();
     TsvRpcClient underlying;
-    KyotoTycoonClient dut;
+    SimpleKyotoTycoonClient dut;
 
     @Before
     public void beforeEach() {
         underlying = mockery.mock(TsvRpcClient.class);
-        dut = new KyotoTycoonClient(underlying);
+        dut = new SimpleKyotoTycoonClient(underlying);
     }
 
     @Test public void
@@ -31,7 +31,7 @@ public class KyotoTycoonClientTest {
         mockery.checking(new Expectations() {{
             oneOf(underlying).getConnection(); will(returnValue(tsvRpcConn));
         }});
-        KyotoTycoonConnection conn = dut.getConnection();
+        SimpleKyotoTycoonConnection conn = (SimpleKyotoTycoonConnection) dut.getConnection();
         assertThat(conn.keyTranscoder, is(dut.keyTranscoder));
         assertThat(conn.valueTranscoder, is(dut.valueTranscoder));
     }

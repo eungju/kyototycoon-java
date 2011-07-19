@@ -17,13 +17,13 @@ public class KyotoTycoonPerformanceTest {
 
     @Before
     public void beforeEach() throws Exception {
-        dut = new KyotoTycoonClient(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        dut = new SimpleKyotoTycoonClient(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
         dut.clear();
     }
 
     @After
     public void afterEach() {
-        dut.close();
+        dut.stop();
     }
 
 	@Test
