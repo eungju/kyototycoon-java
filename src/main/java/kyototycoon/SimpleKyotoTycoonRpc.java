@@ -2,9 +2,14 @@ package kyototycoon;
 
 import kyototycoon.transcoder.StringTranscoder;
 import kyototycoon.transcoder.Transcoder;
+import kyototycoon.tsvrpc.KeyValuePair;
 import kyototycoon.tsvrpc.TsvRpc;
 import kyototycoon.tsvrpc.TsvRpcRequest;
+import kyototycoon.tsvrpc.TsvRpcResponse;
 import kyototycoon.tsvrpc.Values;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     protected static final byte[] KEY = "key".getBytes();
@@ -22,6 +27,24 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
 
     public void setValueTranscoder(Transcoder transcoder) {
         valueTranscoder = transcoder;
+    }
+
+    public Map<String,String> report() {
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("report", new Values()));
+        Map<String, String> result = new HashMap<String, String>();
+        for (KeyValuePair pair : response.output) {
+            result.put(stringTranscoder.decode(pair.key), stringTranscoder.decode(pair.value));
+        }
+        return result;
+    }
+
+    public Map<String,String> status() {
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("status", new Values()));
+        Map<String, String> result = new HashMap<String, String>();
+        for (KeyValuePair pair : response.output) {
+            result.put(stringTranscoder.decode(pair.key), stringTranscoder.decode(pair.value));
+        }
+        return result;
     }
 
     public void set(Object key, Object value) {

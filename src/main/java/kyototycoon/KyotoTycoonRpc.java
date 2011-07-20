@@ -2,12 +2,17 @@ package kyototycoon;
 
 import kyototycoon.transcoder.Transcoder;
 
+import java.util.Map;
+
 public interface KyotoTycoonRpc {
     void setKeyTranscoder(Transcoder transcoder);
     void setValueTranscoder(Transcoder transcoder);
 
     // Common arguments
     //DB
+
+    Map<String,String> report();
+    Map<String,String> status();
 
     void set(Object key, Object value);
     Object get(Object key);

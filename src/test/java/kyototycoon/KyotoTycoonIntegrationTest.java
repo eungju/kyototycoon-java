@@ -1,10 +1,12 @@
 package kyototycoon;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -21,6 +23,18 @@ public class KyotoTycoonIntegrationTest {
     @After
     public void afterEach() {
         dut.stop();
+    }
+
+    @Test public void get_the_report_of_the_server_information() {
+        Map<String, String> actual = dut.report();
+        System.out.println(actual);
+        assertThat(actual, Matchers.<Object>notNullValue());
+    }
+
+    @Test public void get_the_miscellaneous_status_information_of_a_database() {
+        Map<String, String> actual = dut.status();
+        System.out.println(actual);
+        assertThat(actual, Matchers.<Object>notNullValue());
     }
 
     @Test public void getReturnNullWhenTheRecordIsNotExist() {
