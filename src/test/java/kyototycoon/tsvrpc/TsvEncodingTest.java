@@ -36,6 +36,13 @@ public class TsvEncodingTest {
         assertThat(decoded, is(new Values().put("key".getBytes(), "value".getBytes())));
     }
 
+    @Test public void decode_a_line_which_does_not_have_a_value() {
+        assertThat(dut.decode("key".getBytes()), is(new Values().put("key".getBytes(), new byte[0])));
+        assertThat(dut.decode("key\r\n".getBytes()), is(new Values().put("key".getBytes(), new byte[0])));
+        assertThat(dut.decode("key\t".getBytes()), is(new Values().put("key".getBytes(), new byte[0])));
+        assertThat(dut.decode("key\t\r\n".getBytes()), is(new Values().put("key".getBytes(), new byte[0])));
+    }
+
     @Test public void encodingShouldBeFast() {
         byte[] key = "key".getBytes();
         byte[] value = "user:1234567890".getBytes();

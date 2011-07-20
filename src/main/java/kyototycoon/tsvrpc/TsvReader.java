@@ -15,7 +15,11 @@ public class TsvReader {
 
     public byte[] readKey() {
         int s = pos;
-        while (input[pos] != '\t') {
+        while (pos < input.length) {
+            byte c = input[pos];
+            if (c == '\t' || c == '\r' || c == '\n') {
+                break;
+            }
             pos++;
         }
         byte[] buffer = new byte[pos - s];
@@ -24,7 +28,9 @@ public class TsvReader {
     }
 
     public void readTab() {
-        pos++;
+        while (pos < input.length && input[pos] == '\t') {
+            pos++;
+        }
     }
 
     public byte[] readValue() {
