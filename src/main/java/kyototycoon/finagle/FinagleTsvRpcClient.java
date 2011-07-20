@@ -32,7 +32,6 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
                         .codec(new FinagleTsvRpcCodec())
                         .hosts(hosts.substring(1))
                         .hostConnectionLimit(100)
-                        .connectionTimeout(Duration.fromTimeUnit(1, TimeUnit.SECONDS))
                         .requestTimeout(Duration.fromTimeUnit(1, TimeUnit.SECONDS));
                         //.retries(2);
                         //.reportTo(new OstrichStatsReceiver())
