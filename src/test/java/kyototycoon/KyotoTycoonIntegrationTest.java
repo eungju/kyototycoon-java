@@ -37,6 +37,53 @@ public class KyotoTycoonIntegrationTest {
         assertThat(actual, Matchers.<Object>notNullValue());
     }
 
+    @Test public void remove_all_records_in_a_database() {
+        dut.set("key", "value");
+        dut.clear();
+        assertThat(dut.get("key"), nullValue());
+    }
+
+    @Test public void synchronize_updated_contents_with_the_file_and_the_device() {
+        dut.synchronize(true);
+    }
+
+    @Test public void set_the_value_of_a_record() {
+        dut.set("key", "value");
+        assertThat((String) dut.get("key"), is("value"));
+    }
+
+    @Test public void add_a_record() {
+        dut.add("key", "value");
+        assertThat((String) dut.get("key"), is("value"));
+    }
+
+    @Test(expected=RuntimeException.class) public void add_a_existing_record() {
+        dut.add("key", "value");
+        dut.add("key", "value");
+    }
+
+    @Test public void replace_the_value_of_a_record() {
+        dut.add("key", "1");
+        dut.replace("key", "2");
+        assertThat((String) dut.get("key"), is("2"));
+    }
+
+    @Test(expected=RuntimeException.class)
+    public void replace_the_value_of_a_non_existing_record() {
+        dut.replace("key", "value");
+    }
+
+    @Test public void append_the_value_of_a_record() {
+        dut.add("key", "1");
+        dut.append("key", "23");
+        assertThat((String) dut.get("key"), is("123"));
+    }
+
+    @Test public void append_the_value_of_a_non_existing_record() {
+        dut.append("key", "23");
+        assertThat((String) dut.get("key"), is("23"));
+    }
+
     @Test public void getReturnNullWhenTheRecordIsNotExist() {
         assertThat(dut.get("key"), nullValue());
     }
