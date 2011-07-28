@@ -1,11 +1,10 @@
 package kyototycoon.transcoder;
 
-import kyototycoon.transcoder.StringTranscoder;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class StringTranscoderTest {
     private StringTranscoder dut;

@@ -16,8 +16,9 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     protected static final byte[] VALUE = "value".getBytes();
     protected static final byte[] XT = "xt".getBytes();
     protected static final byte[] NUM = "num".getBytes();
+    protected static final byte[] ORIG = "orig".getBytes();
     protected static final byte[] ERROR = "ERROR".getBytes();
-    
+
     protected static final int STATUS_OK = 200;
 
     protected final StringTranscoder stringTranscoder = StringTranscoder.INSTANCE;
@@ -74,7 +75,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("set", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
-                .put(XT, valueTranscoder.encode(String.valueOf(xt)))));
+                .put(XT, stringTranscoder.encode(String.valueOf(xt)))));
         checkError(response);
     }
 
@@ -86,7 +87,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("add", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
-                .put(XT, valueTranscoder.encode(String.valueOf(xt)))));
+                .put(XT, stringTranscoder.encode(String.valueOf(xt)))));
         checkError(response);
     }
 
@@ -98,7 +99,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("replace", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
-                .put(XT, valueTranscoder.encode(String.valueOf(xt)))));
+                .put(XT, stringTranscoder.encode(String.valueOf(xt)))));
         checkError(response);
     }
 
@@ -110,7 +111,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("append", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
-                .put(XT, valueTranscoder.encode(String.valueOf(xt)))));
+                .put(XT, stringTranscoder.encode(String.valueOf(xt)))));
         checkError(response);
     }
 
@@ -125,13 +126,29 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public long increment(String key, long num) {
-        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num)))));
+    	return increment(key, num, 0, Long.MAX_VALUE);
+    }
+
+    public long increment(String key, long num, long orig, long xt) {
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment", new Values()
+        		.put(KEY, keyTranscoder.encode(key))
+        		.put(NUM, stringTranscoder.encode(String.valueOf(num)))
+        		.put(ORIG, stringTranscoder.encode(String.valueOf(orig)))
+        		.put(XT, stringTranscoder.encode(String.valueOf(xt)))));
         checkError(response);
         return Long.parseLong(stringTranscoder.decode(response.output.get(NUM)));
     }
 
     public double incrementDouble(String key, double num) {
-        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment_double", new Values().put(KEY, keyTranscoder.encode(key)).put(NUM, stringTranscoder.encode(String.valueOf(num)))));
+    	return incrementDouble(key, num, 0, Long.MAX_VALUE);
+    }
+
+    public double incrementDouble(String key, double num, double orig, long xt) {
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment_double", new Values()
+        		.put(KEY, keyTranscoder.encode(key))
+        		.put(NUM, stringTranscoder.encode(String.valueOf(num)))
+        		.put(ORIG, stringTranscoder.encode(String.valueOf(orig)))
+        		.put(XT, stringTranscoder.encode(String.valueOf(xt)))));
         checkError(response);
         return Double.parseDouble(stringTranscoder.decode(response.output.get(NUM)));
     }

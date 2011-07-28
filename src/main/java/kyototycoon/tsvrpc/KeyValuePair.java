@@ -15,4 +15,9 @@ public class KeyValuePair {
         KeyValuePair other = (KeyValuePair) o;
         return Arrays.equals(key, other.key) && Arrays.equals(value, other.value);
     }
+    
+    @Override
+    public String toString() {
+    	return new String(key) + "=" + new String(value);
+    }
 }

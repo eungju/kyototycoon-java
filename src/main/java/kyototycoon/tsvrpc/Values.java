@@ -48,6 +48,17 @@ public class Values implements Iterable<KeyValuePair> {
 
     @Override
     public String toString() {
-        return entries.toString();
+    	StringBuilder buffer = new StringBuilder("[");
+    	boolean first = true;
+    	for (KeyValuePair entry : entries) {
+    		if (first) {
+    			first = false;
+    		} else {
+    			buffer.append(", ");
+    		}
+    		buffer.append(entry.toString());
+    	}
+    	buffer.append("]");
+        return buffer.toString();
     }
 }

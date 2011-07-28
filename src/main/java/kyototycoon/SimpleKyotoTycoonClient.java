@@ -5,6 +5,9 @@ import kyototycoon.tsvrpc.TsvRpcClient;
 
 import java.net.URI;
 
+/**
+ * TODO: Lifecycle?
+ */
 public class SimpleKyotoTycoonClient extends SimpleKyotoTycoonRpc implements KyotoTycoonClient {
     private final TsvRpcClient client;
 

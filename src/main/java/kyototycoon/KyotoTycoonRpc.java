@@ -27,5 +27,7 @@ public interface KyotoTycoonRpc {
 
     Object get(String key);
     long increment(String key, long num);
+    long increment(String key, long num, long orig, long xt);
     double incrementDouble(String key, double num);
+    double incrementDouble(String key, double num, double orig, long xt);
 }

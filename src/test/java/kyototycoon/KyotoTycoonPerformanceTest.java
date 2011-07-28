@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class KyotoTycoonPerformanceTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    KyotoTycoonClient dut;
+    SimpleKyotoTycoonClient dut;
 
     @Before
     public void beforeEach() throws Exception {

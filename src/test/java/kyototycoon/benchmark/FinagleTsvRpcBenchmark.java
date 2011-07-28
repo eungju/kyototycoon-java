@@ -6,7 +6,6 @@ import kyototycoon.tsvrpc.TsvRpcRequest;
 import kyototycoon.tsvrpc.TsvRpcResponse;
 import kyototycoon.tsvrpc.Values;
 
-import java.net.URI;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;

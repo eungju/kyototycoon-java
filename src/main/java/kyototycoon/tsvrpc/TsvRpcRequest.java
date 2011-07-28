@@ -8,4 +8,9 @@ public class TsvRpcRequest {
         this.procedure = procedure;
         this.input = input;
     }
+    
+    @Override
+    public String toString() {
+    	return procedure + " " + input.toString();
+    }
 }

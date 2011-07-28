@@ -3,8 +3,8 @@ package kyototycoon.transcoder;
 import java.nio.charset.Charset;
 
 public class StringTranscoder implements Transcoder<String> {
-    private final Charset encoding = Charset.forName("UTF-8");
     public static final StringTranscoder INSTANCE = new StringTranscoder();
+    private final Charset encoding = Charset.forName("UTF-8");
 
     public byte[] encode(String decoded) {
         return decoded.getBytes(encoding);

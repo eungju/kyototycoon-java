@@ -8,4 +8,9 @@ public class TsvRpcResponse {
         this.status = status;
         this.output = output;
     }
+    
+    @Override
+    public String toString() {
+    	return status + " " + output.toString();
+    }
 }
