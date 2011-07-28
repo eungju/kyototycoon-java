@@ -86,7 +86,7 @@ public class KyotoTycoonIntegrationTest {
     
     @Test public void
     add_a_numeric_integer_to_the_numeric_integer_value_of_a_record() {
-    	dut.increment("key", 3L, Long.MAX_VALUE, Long.MAX_VALUE);
+    	dut.increment("key", 3L, IncrementOrigin.ZERO, ExpirationTime.NONE);
     	assertThat(dut.increment("key", 4), is(7L));
     }
 
@@ -104,17 +104,17 @@ public class KyotoTycoonIntegrationTest {
     @Test public void
     set_the_numeric_integer_value_of_a_record() {
         dut.increment("key", 3L);
-        assertThat(dut.increment("key", 4L, Long.MAX_VALUE, Long.MAX_VALUE), is(4L));
+        assertThat(dut.increment("key", 4L, IncrementOrigin.SET, ExpirationTime.NONE), is(4L));
     }
 
     @Test(expected=RuntimeException.class) public void
     try_to_set_the_numeric_integer_value_of_a_record() {
-        assertThat(dut.increment("key", 4L, Long.MIN_VALUE, Long.MAX_VALUE), is(4L));
+        dut.increment("key", 4L, IncrementOrigin.TRY, ExpirationTime.NONE);
     }
 
     @Test public void
     add_a_numeric_double_value_to_the_numeric_double_value_of_a_record() {
-    	dut.incrementDouble("key", 0.3, Double.POSITIVE_INFINITY, Long.MAX_VALUE);
+    	dut.incrementDouble("key", 0.3, IncrementOrigin.ZERO, ExpirationTime.NONE);
     	assertThat(dut.incrementDouble("key", 0.4), is(0.7));
     }
 
@@ -132,12 +132,12 @@ public class KyotoTycoonIntegrationTest {
     @Test public void
     set_the_numeric_double_value_of_a_record() {
         dut.incrementDouble("key", 0.3);
-        assertThat(dut.incrementDouble("key", 0.4, Double.POSITIVE_INFINITY, Long.MAX_VALUE), is(0.4));
+        assertThat(dut.incrementDouble("key", 0.4, IncrementOrigin.SET, ExpirationTime.NONE), is(0.4));
     }
 
     @Test(expected=RuntimeException.class) public void
     try_to_set_the_double_value_of_a_record() {
-        assertThat(dut.incrementDouble("key", 0.4, Double.NEGATIVE_INFINITY, Long.MAX_VALUE), is(0.4));
+        dut.incrementDouble("key", 0.4, IncrementOrigin.TRY, ExpirationTime.NONE);
     }
 
     @Test public void getReturnNullWhenTheRecordIsNotExist() {

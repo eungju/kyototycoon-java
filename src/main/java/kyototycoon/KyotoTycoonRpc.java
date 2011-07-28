@@ -5,7 +5,7 @@ import kyototycoon.transcoder.Transcoder;
 import java.util.Map;
 
 public interface KyotoTycoonRpc {
-    void setValueTranscoder(Transcoder transcoder);
+	void setValueTranscoder(Transcoder transcoder);
 
     // Common arguments
     //DB
@@ -16,18 +16,18 @@ public interface KyotoTycoonRpc {
     void synchronize(boolean hard);
     void synchronize(boolean hard, String command);
 
-    void set(String key, Object value, long xt);
+    void set(String key, Object value, ExpirationTime xt);
     void set(String key, Object value);
-    void add(String key, Object value, long xt);
+    void add(String key, Object value, ExpirationTime xt);
     void add(String key, Object value);
-    void replace(String key, Object value, long xt);
+    void replace(String key, Object value, ExpirationTime xt);
     void replace(String key, Object value);
-    void append(String key, Object value, long xt);
+    void append(String key, Object value, ExpirationTime xt);
     void append(String key, Object value);
 
     Object get(String key);
     long increment(String key, long num);
-    long increment(String key, long num, long orig, long xt);
+    long increment(String key, long num, IncrementOrigin orig, ExpirationTime xt);
     double incrementDouble(String key, double num);
-    double incrementDouble(String key, double num, double orig, long xt);
+    double incrementDouble(String key, double num, IncrementOrigin orig, ExpirationTime xt);
 }

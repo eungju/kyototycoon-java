@@ -68,50 +68,50 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public void set(String key, Object value) {
-        set(key, value, Long.MAX_VALUE);
+        set(key, value, ExpirationTime.NONE);
     }
     
-    public void set(String key, Object value, long xt) {
+    public void set(String key, Object value, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("set", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
-                .put(XT, stringTranscoder.encode(String.valueOf(xt)))));
+                .putIf(XT, stringTranscoder.encode(String.valueOf(xt.getValue())), xt.isEnabled())));
         checkError(response);
     }
 
     public void add(String key, Object value) {
-        add(key, value, Long.MAX_VALUE);
+        add(key, value, ExpirationTime.NONE);
     }
 
-    public void add(String key, Object value, long xt) {
+    public void add(String key, Object value, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("add", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
-                .put(XT, stringTranscoder.encode(String.valueOf(xt)))));
+                .putIf(XT, stringTranscoder.encode(String.valueOf(xt.getValue())), xt.isEnabled())));
         checkError(response);
     }
 
     public void replace(String key, Object value) {
-        replace(key, value, Long.MAX_VALUE);
+        replace(key, value, ExpirationTime.NONE);
     }
 
-    public void replace(String key, Object value, long xt) {
+    public void replace(String key, Object value, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("replace", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
-                .put(XT, stringTranscoder.encode(String.valueOf(xt)))));
+                .putIf(XT, stringTranscoder.encode(String.valueOf(xt.getValue())), xt.isEnabled())));
         checkError(response);
     }
 
     public void append(String key, Object value) {
-        append(key, value, Long.MAX_VALUE);
+        append(key, value, ExpirationTime.NONE);
     }
 
-    public void append(String key, Object value, long xt) {
+    public void append(String key, Object value, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("append", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
-                .put(XT, stringTranscoder.encode(String.valueOf(xt)))));
+                .putIf(XT, stringTranscoder.encode(String.valueOf(xt.getValue())), xt.isEnabled())));
         checkError(response);
     }
 
@@ -126,29 +126,31 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public long increment(String key, long num) {
-    	return increment(key, num, 0, Long.MAX_VALUE);
+    	return increment(key, num, IncrementOrigin.ZERO, ExpirationTime.NONE);
     }
 
-    public long increment(String key, long num, long orig, long xt) {
+    public long increment(String key, long num, IncrementOrigin orig, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment", new Values()
         		.put(KEY, keyTranscoder.encode(key))
         		.put(NUM, stringTranscoder.encode(String.valueOf(num)))
-        		.put(ORIG, stringTranscoder.encode(String.valueOf(orig)))
-        		.put(XT, stringTranscoder.encode(String.valueOf(xt)))));
+        		.putIf(ORIG, stringTranscoder.encode(String.valueOf(Long.MAX_VALUE)), orig == IncrementOrigin.SET)
+        		.putIf(ORIG, stringTranscoder.encode(String.valueOf(Long.MIN_VALUE)), orig == IncrementOrigin.TRY)
+                .putIf(XT, stringTranscoder.encode(String.valueOf(xt.getValue())), xt.isEnabled())));
         checkError(response);
         return Long.parseLong(stringTranscoder.decode(response.output.get(NUM)));
     }
 
     public double incrementDouble(String key, double num) {
-    	return incrementDouble(key, num, 0, Long.MAX_VALUE);
+    	return incrementDouble(key, num, IncrementOrigin.ZERO, ExpirationTime.NONE);
     }
 
-    public double incrementDouble(String key, double num, double orig, long xt) {
+    public double incrementDouble(String key, double num, IncrementOrigin orig, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment_double", new Values()
         		.put(KEY, keyTranscoder.encode(key))
         		.put(NUM, stringTranscoder.encode(String.valueOf(num)))
-        		.put(ORIG, stringTranscoder.encode(String.valueOf(orig)))
-        		.put(XT, stringTranscoder.encode(String.valueOf(xt)))));
+        		.putIf(ORIG, stringTranscoder.encode(String.valueOf(Double.POSITIVE_INFINITY)), orig == IncrementOrigin.SET)
+        		.putIf(ORIG, stringTranscoder.encode(String.valueOf(Double.NEGATIVE_INFINITY)), orig == IncrementOrigin.TRY)
+                .putIf(XT, stringTranscoder.encode(String.valueOf(xt.getValue())), xt.isEnabled())));
         checkError(response);
         return Double.parseDouble(stringTranscoder.decode(response.output.get(NUM)));
     }
