@@ -16,18 +16,18 @@ public interface KyotoTycoonRpc {
     void synchronize(boolean hard);
     void synchronize(boolean hard, String command);
 
-    void set(String key, Object value, ExpirationTime xt);
-    void set(String key, Object value);
-    void add(String key, Object value, ExpirationTime xt);
-    void add(String key, Object value);
-    void replace(String key, Object value, ExpirationTime xt);
-    void replace(String key, Object value);
-    void append(String key, Object value, ExpirationTime xt);
-    void append(String key, Object value);
+    void set(Object key, Object value, ExpirationTime xt);
+    void set(Object key, Object value);
+    void add(Object key, Object value, ExpirationTime xt);
+    void add(Object key, Object value);
+    void replace(Object key, Object value, ExpirationTime xt);
+    void replace(Object key, Object value);
+    void append(Object key, Object value, ExpirationTime xt);
+    void append(Object key, Object value);
 
-    Object get(String key);
-    long increment(String key, long num);
-    long increment(String key, long num, IncrementOrigin orig, ExpirationTime xt);
-    double incrementDouble(String key, double num);
-    double incrementDouble(String key, double num, IncrementOrigin orig, ExpirationTime xt);
+    Object get(Object key);
+    long increment(Object key, long num);
+    long increment(Object key, long num, IncrementOrigin orig, ExpirationTime xt);
+    double incrementDouble(Object key, double num);
+    double incrementDouble(Object key, double num, IncrementOrigin orig, ExpirationTime xt);
 }

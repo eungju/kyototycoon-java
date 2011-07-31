@@ -19,12 +19,14 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     protected static final byte[] ORIG = "orig".getBytes();
     protected static final byte[] ERROR = "ERROR".getBytes();
 
-    protected static final int STATUS_OK = 200;
-
     protected final StringTranscoder stringTranscoder = StringTranscoder.INSTANCE;
-    protected final Transcoder keyTranscoder = StringTranscoder.INSTANCE;
+    protected Transcoder keyTranscoder = StringTranscoder.INSTANCE;
     protected Transcoder valueTranscoder = StringTranscoder.INSTANCE;
     protected TsvRpc tsvRpc;
+
+    public void setKeyTranscoder(Transcoder transcoder) {
+        keyTranscoder = transcoder;
+    }
 
     public void setValueTranscoder(Transcoder transcoder) {
         valueTranscoder = transcoder;
@@ -67,11 +69,11 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         checkError(response);
     }
 
-    public void set(String key, Object value) {
+    public void set(Object key, Object value) {
         set(key, value, ExpirationTime.NONE);
     }
     
-    public void set(String key, Object value, ExpirationTime xt) {
+    public void set(Object key, Object value, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("set", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
@@ -79,11 +81,11 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         checkError(response);
     }
 
-    public void add(String key, Object value) {
+    public void add(Object key, Object value) {
         add(key, value, ExpirationTime.NONE);
     }
 
-    public void add(String key, Object value, ExpirationTime xt) {
+    public void add(Object key, Object value, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("add", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
@@ -91,11 +93,11 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         checkError(response);
     }
 
-    public void replace(String key, Object value) {
+    public void replace(Object key, Object value) {
         replace(key, value, ExpirationTime.NONE);
     }
 
-    public void replace(String key, Object value, ExpirationTime xt) {
+    public void replace(Object key, Object value, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("replace", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
@@ -103,11 +105,11 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         checkError(response);
     }
 
-    public void append(String key, Object value) {
+    public void append(Object key, Object value) {
         append(key, value, ExpirationTime.NONE);
     }
 
-    public void append(String key, Object value, ExpirationTime xt) {
+    public void append(Object key, Object value, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("append", new Values()
                 .put(KEY, keyTranscoder.encode(key))
                 .put(VALUE, valueTranscoder.encode(value))
@@ -116,7 +118,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     //TODO:
-    public Object get(String key) {
+    public Object get(Object key) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("get", new Values().put(KEY, keyTranscoder.encode(key))));
         if (response.status == 450) {
             return null;
@@ -125,11 +127,11 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         return valueTranscoder.decode(response.output.get(VALUE));
     }
 
-    public long increment(String key, long num) {
+    public long increment(Object key, long num) {
     	return increment(key, num, IncrementOrigin.ZERO, ExpirationTime.NONE);
     }
 
-    public long increment(String key, long num, IncrementOrigin orig, ExpirationTime xt) {
+    public long increment(Object key, long num, IncrementOrigin orig, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment", new Values()
         		.put(KEY, keyTranscoder.encode(key))
         		.put(NUM, stringTranscoder.encode(String.valueOf(num)))
@@ -140,11 +142,11 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         return Long.parseLong(stringTranscoder.decode(response.output.get(NUM)));
     }
 
-    public double incrementDouble(String key, double num) {
+    public double incrementDouble(Object key, double num) {
     	return incrementDouble(key, num, IncrementOrigin.ZERO, ExpirationTime.NONE);
     }
 
-    public double incrementDouble(String key, double num, IncrementOrigin orig, ExpirationTime xt) {
+    public double incrementDouble(Object key, double num, IncrementOrigin orig, ExpirationTime xt) {
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment_double", new Values()
         		.put(KEY, keyTranscoder.encode(key))
         		.put(NUM, stringTranscoder.encode(String.valueOf(num)))
@@ -163,6 +165,6 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         String message = (error == null || error.length == 0)
                 ? "HTTP Status Code is " + response.status
                 : stringTranscoder.decode(error);
-        throw new RuntimeException(message);
+        throw new KyotoTycoonException(message);
     }
 }
