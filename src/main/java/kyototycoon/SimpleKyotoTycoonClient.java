@@ -4,6 +4,7 @@ import kyototycoon.finagle.FinagleTsvRpcClient;
 import kyototycoon.tsvrpc.TsvRpcClient;
 
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TODO: Lifecycle?
@@ -11,18 +12,27 @@ import java.net.URI;
 public class SimpleKyotoTycoonClient extends SimpleKyotoTycoonRpc implements KyotoTycoonClient {
     private final TsvRpcClient client;
 
-    public SimpleKyotoTycoonClient(Iterable<URI> addresses) throws Exception {
-        client = new FinagleTsvRpcClient();
-        client.setHosts(addresses);
-        client.start();
-        tsvRpc = client;
+    public SimpleKyotoTycoonClient() {
+        this(new FinagleTsvRpcClient());
     }
-
+    
     public SimpleKyotoTycoonClient(TsvRpcClient client) {
         this.client = client;
         tsvRpc = client;
     }
 
+    public void setHosts(Iterable<URI> addresses) {
+        client.setHosts(addresses);
+    }
+
+    public void setRequestTimeout(long timeout, TimeUnit unit) {
+        client.setRequestTimeout(timeout, unit);
+    }
+
+    public void start() {
+        client.start();
+    }
+    
     public void stop() {
         client.stop();
     }

@@ -17,7 +17,9 @@ public class KyotoTycoonPerformanceTest {
 
     @Before
     public void beforeEach() throws Exception {
-        dut = new SimpleKyotoTycoonClient(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        dut = new SimpleKyotoTycoonClient();
+        dut.setHosts(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        dut.start();
         dut.clear();
     }
 

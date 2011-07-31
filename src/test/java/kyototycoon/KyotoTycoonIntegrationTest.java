@@ -1,22 +1,24 @@
 package kyototycoon;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-import java.util.Map;
-
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 public class KyotoTycoonIntegrationTest {
     private SimpleKyotoTycoonClient dut;
 
     @Before
     public void beforeEach() throws Exception {
-        dut = new SimpleKyotoTycoonClient(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        dut = new SimpleKyotoTycoonClient();
+        dut.setHosts(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        dut.start();
         dut.clear();
     }
 

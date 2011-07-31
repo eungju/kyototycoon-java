@@ -9,6 +9,7 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import java.net.URI;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class NettyTsvRpcClient implements TsvRpcClient {
     private ClientBootstrap bootstrap;
@@ -25,6 +26,10 @@ public class NettyTsvRpcClient implements TsvRpcClient {
 
     public void setHosts(Iterable<URI> addresses) {
         this.addresses = addresses;
+    }
+
+    public void setRequestTimeout(long timeout, TimeUnit unit) {
+        throw new UnsupportedOperationException();
     }
 
     public void start() {

@@ -11,15 +11,17 @@ import kyototycoon.tsvrpc.TsvRpcResponse;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-/**
- * TODO: Lifecycle?
- */
 public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     private Iterable<URI> addresses;
+	private Duration requestTimeout = Duration.fromTimeUnit(1, TimeUnit.SECONDS);
     private ServiceFactory<TsvRpcRequest, TsvRpcResponse> serviceFactory;
 
     public void setHosts(Iterable<URI> addresses) {
         this.addresses = addresses;
+    }
+    
+    public void setRequestTimeout(long timeout, TimeUnit unit) {
+    	this.requestTimeout = Duration.fromTimeUnit(timeout, unit);
     }
 
     public void start() {
@@ -32,7 +34,7 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
                         .codec(new FinagleTsvRpcCodec())
                         .hosts(hosts.substring(1))
                         .hostConnectionLimit(100)
-                        .requestTimeout(Duration.fromTimeUnit(1, TimeUnit.SECONDS));
+                        .requestTimeout(requestTimeout);
                         //.retries(2);
                         //.reportTo(new OstrichStatsReceiver())
                         //.logger(Logger.getLogger("http"));
