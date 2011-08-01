@@ -24,10 +24,13 @@ public interface KyotoTycoonRpc {
     void replace(Object key, Object value);
     void append(Object key, Object value, ExpirationTime xt);
     void append(Object key, Object value);
-
-    Object get(Object key);
     long increment(Object key, long num);
     long increment(Object key, long num, IncrementOrigin orig, ExpirationTime xt);
     double incrementDouble(Object key, double num);
     double incrementDouble(Object key, double num, IncrementOrigin orig, ExpirationTime xt);
+    boolean cas(Object key, Object oval, Object nval);
+    boolean cas(Object key, Object oval, Object nval, ExpirationTime xt);
+    boolean remove(Object key);
+
+    Object get(Object key);
 }

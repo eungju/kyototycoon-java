@@ -142,6 +142,31 @@ public class KyotoTycoonIntegrationTest {
         dut.incrementDouble("key", 0.4, IncrementOrigin.TRY, ExpirationTime.NONE);
     }
 
+    @Test public void
+    compareAndSwap() {
+        dut.set("key", "1");
+        assertThat(dut.cas("key", "1", "2"), is(true));
+        assertThat((String) dut.get("key"), is("2"));
+        assertThat(dut.cas("key", "1", "3"), is(false));
+        assertThat((String) dut.get("key"), is("2"));
+    }
+
+    @Test public void
+    compareAndSwapRemovesTheRecord() {
+        dut.set("key", "1");
+        dut.cas("key", "1", null);
+        assertThat(dut.get("key"), nullValue());
+    }
+
+    @Test public void remove_a_record() {
+        dut.set("key", "value");
+        assertThat(dut.remove("key"), is(true));
+    }
+
+    @Test public void remove_a_non_existing_record() {
+        assertThat(dut.remove("key"), is(false));
+    }
+
     @Test public void getReturnNullWhenTheRecordIsNotExist() {
         assertThat(dut.get("key"), nullValue());
     }

@@ -161,6 +161,37 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         return Double.parseDouble(decodeStr(response.output.get(NUM)));
     }
 
+    public boolean cas(Object key, Object oval, Object nval) {
+        return cas(key, oval, nval, ExpirationTime.NONE);
+    }
+
+    public boolean cas(Object key, Object oval, Object nval, ExpirationTime xt) {
+        Values input = new Values().put(KEY, keyTranscoder.encode(key));
+        if (oval != null) {
+            input.put("oval".getBytes(), valueTranscoder.encode(oval));
+        }
+        if (nval != null) {
+            input.put("nval".getBytes(), valueTranscoder.encode(nval));
+        }
+        putExpirationTime(input, xt);
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("cas", input));
+        if (response.status == 450) {
+            return false;
+        }
+        checkError(response);
+        return true;
+    }
+
+    public boolean remove(Object key) {
+        Values input = new Values().put(KEY, keyTranscoder.encode(key));
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("remove", input));
+        if (response.status == 450) {
+            return false;
+        }
+        checkError(response);
+        return true;
+    }
+    
     //Utilities
 
     byte[] encodeStr(String s) {
