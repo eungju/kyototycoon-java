@@ -6,20 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Values implements Iterable<KeyValuePair> {
-    private final List<KeyValuePair> entries = new ArrayList<KeyValuePair>();
+    private final List<KeyValuePair> entries = new ArrayList<KeyValuePair>(4);
 
     public Values put(byte[] key, byte[] value) {
         entries.add(new KeyValuePair(key, value));
         return this;
     }
 
-	public Values putIf(byte[] key, byte[] value, boolean p) {
-		if (p) {
-			put(key, value);
-		}
-		return this;
-	}
-    
     public byte[] get(byte[] key) {
         for (KeyValuePair entry : entries) {
             if (Arrays.equals(key, entry.key)) {
