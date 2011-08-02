@@ -118,15 +118,6 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         checkError(response);
     }
 
-    public Object get(Object key) {
-        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("get", new Values().put(KEY, keyTranscoder.encode(key))));
-        if (response.status == 450) {
-            return null;
-        }
-        checkError(response);
-        return valueTranscoder.decode(response.output.get(VALUE));
-    }
-
     public long increment(Object key, long num) {
     	return increment(key, num, IncrementOrigin.ZERO, ExpirationTime.NONE);
     }
@@ -191,7 +182,26 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         checkError(response);
         return true;
     }
-    
+
+    public Object get(Object key) {
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("get", new Values().put(KEY, keyTranscoder.encode(key))));
+        if (response.status == 450) {
+            return null;
+        }
+        checkError(response);
+        return valueTranscoder.decode(response.output.get(VALUE));
+    }
+
+    public Object seize(Object key) {
+        Values input = new Values().put(KEY, keyTranscoder.encode(key));
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("seize", input));
+        if (response.status == 450) {
+            return null;
+        }
+        checkError(response);
+        return valueTranscoder.decode(response.output.get(VALUE));
+    }
+
     //Utilities
 
     byte[] encodeStr(String s) {

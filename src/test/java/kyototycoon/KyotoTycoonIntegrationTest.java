@@ -167,17 +167,27 @@ public class KyotoTycoonIntegrationTest {
         assertThat(dut.remove("key"), is(false));
     }
 
-    @Test public void getReturnNullWhenTheRecordIsNotExist() {
+    @Test public void
+    get_retrieves_the_value_of_a_record() {
+        dut.set("key", "value");
+        assertThat((String) dut.get("key"), is("value"));
+    }
+
+    @Test public void
+    get_returns_null_when_a_record_is_not_exist() {
         assertThat(dut.get("key"), nullValue());
     }
 
-    @Test public void setAndGet() {
+    @Test public void
+    seize_retrieves_the_value_of_a_record_and_remove_it_atomically() {
         dut.set("key", "value");
-        assertThat(dut.get("key"), is((Object) "value"));
+        assertThat((String) dut.seize("key"), is("value"));
+        assertThat(dut.get("key"), nullValue());
     }
 
-    @Test public void storeSpecialCharacters() {
-        dut.set("display\tname", "Eungju PARK\n");
-        assertThat(dut.get("display\tname"), is((Object) "Eungju PARK\n"));
+    @Test public void
+    seize_returns_null_when_a_record_is_not_exist() {
+        assertThat((String) dut.seize("key"), nullValue());
+        assertThat(dut.get("key"), nullValue());
     }
 }

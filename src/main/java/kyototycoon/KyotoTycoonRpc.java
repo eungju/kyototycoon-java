@@ -31,6 +31,7 @@ public interface KyotoTycoonRpc {
     boolean cas(Object key, Object oval, Object nval);
     boolean cas(Object key, Object oval, Object nval, ExpirationTime xt);
     boolean remove(Object key);
-
     Object get(Object key);
+    //TODO: How to return xt of a record?
+    Object seize(Object key);
 }
