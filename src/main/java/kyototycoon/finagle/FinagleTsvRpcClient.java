@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     private Iterable<URI> addresses;
-	private Duration requestTimeout = Duration.fromTimeUnit(1, TimeUnit.SECONDS);
+	private Duration requestTimeout = null;
     private ServiceFactory<TsvRpcRequest, TsvRpcResponse> serviceFactory;
 
     public void setHosts(Iterable<URI> addresses) {
@@ -32,12 +32,14 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
         }
         ClientBuilder builder = ClientBuilder.get()
                         .codec(new FinagleTsvRpcCodec())
-                        .hosts(hosts.substring(1))
-                        .hostConnectionLimit(100)
-                        .requestTimeout(requestTimeout);
                         //.retries(2);
                         //.reportTo(new OstrichStatsReceiver())
                         //.logger(Logger.getLogger("http"));
+                        .hosts(hosts.substring(1))
+                        .hostConnectionLimit(100);
+        if (requestTimeout != null) {
+            builder.requestTimeout(requestTimeout);
+        }
         serviceFactory = ClientBuilder.safeBuildFactory(builder);
         service = serviceFactory.service();
     }
