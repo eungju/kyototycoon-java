@@ -23,7 +23,7 @@ public class TsvEncoding {
             }
             return buffer.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException("Error while encode " + input, e);
+            throw new RuntimeException("Error while encoding " + input, e);
         }
     }
 
@@ -40,7 +40,7 @@ public class TsvEncoding {
             }
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("Error while decode " + input, e);
+            throw new RuntimeException("Error while decoding " + input, e);
         }
     }
 }

@@ -2,14 +2,10 @@ package kyototycoon.tsvrpc;
 
 import org.apache.commons.codec.binary.Base64;
 
-import java.io.IOException;
+public class Base64ValueEncoding extends CommonsCodecValueEncoding {
+    private static final Base64 codec = new Base64();
 
-public class Base64ValueEncoding implements ValueEncoding {
-    public byte[] encode(byte[] value) throws IOException {
-        return Base64.encodeBase64(value);
-    }
-
-    public byte[] decode(byte[] value) throws IOException {
-        return Base64.decodeBase64(value);
+    public Base64ValueEncoding() {
+        super(codec, codec);
     }
 }
