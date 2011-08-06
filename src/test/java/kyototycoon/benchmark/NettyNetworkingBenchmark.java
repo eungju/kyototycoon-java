@@ -6,14 +6,12 @@ import kyototycoon.tsvrpc.TsvRpcRequest;
 import kyototycoon.tsvrpc.TsvRpcResponse;
 import kyototycoon.tsvrpc.Values;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.*;
 
 public class NettyNetworkingBenchmark {
 	public static void main(String[] args) throws Exception {
 		final NettyTsvRpcClient db = new NettyTsvRpcClient();
-        db.setHosts(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        db.setHost(KyotoTycoonFixture.SERVER_ADDRESS);
         db.start();
         final Values input = new Values();
         input.put("key".getBytes(), "1234567890".getBytes());
