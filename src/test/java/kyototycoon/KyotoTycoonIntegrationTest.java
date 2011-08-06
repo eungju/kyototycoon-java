@@ -19,7 +19,7 @@ public class KyotoTycoonIntegrationTest {
     @Before
     public void beforeEach() throws Exception {
         dut = new SimpleKyotoTycoonClient();
-        dut.setHosts(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        dut.setHost(KyotoTycoonFixture.SERVER_ADDRESS);
         dut.start();
         dut.clear();
     }
