@@ -9,6 +9,7 @@ import kyototycoon.tsvrpc.TsvRpcResponse;
 import kyototycoon.tsvrpc.Values;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
@@ -200,6 +201,84 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         }
         checkError(response);
         return valueTranscoder.decode(response.output.get(VALUE));
+    }
+
+    public long setBulk(Map<Object, Object> entries) {
+        return setBulk(entries, ExpirationTime.NONE, false);
+    }
+
+    public long setBulk(Map<Object, Object> entries, ExpirationTime xt, boolean atomic) {
+        Values input = new Values();
+        putExpirationTime(input, xt);
+        if (atomic) {
+            input.put("atomic".getBytes(), new byte[0]);
+        }
+        for (Map.Entry<Object, Object> entry : entries.entrySet()) {
+            byte[] key = keyTranscoder.encode(entry.getKey());
+            byte[] value = valueTranscoder.encode(entry.getValue());
+            byte[] markedKey = new byte[key.length + 1];
+            markedKey[0] = '_';
+            System.arraycopy(key, 0, markedKey, 1, key.length);
+            input.put(markedKey, value);
+        }
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("set_bulk", input));
+        checkError(response);
+        return Long.parseLong(decodeStr(response.output.get(NUM)));
+    }
+
+    public long removeBulk(List<Object> keys) {
+        return removeBulk(keys, false);
+    }
+
+    public long removeBulk(List<Object> keys, boolean atomic) {
+        Values input = new Values();
+        if (atomic) {
+            input.put("atomic".getBytes(), new byte[0]);
+        }
+        for (Object key : keys) {
+            byte[] bareKey = keyTranscoder.encode(key);
+            byte[] markedKey = new byte[bareKey.length + 1];
+            markedKey[0] = '_';
+            System.arraycopy(bareKey, 0, markedKey, 1, bareKey.length);
+            input.put(markedKey, new byte[0]);
+        }
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("remove_bulk", input));
+        checkError(response);
+        return Long.parseLong(decodeStr(response.output.get(NUM)));
+    }
+
+    public Map<Object, Object> getBulk(List<Object> keys) {
+        return getBulk(keys, false);
+    }
+
+    public Map<Object, Object> getBulk(List<Object> keys, boolean atomic) {
+        Values input = new Values();
+        if (atomic) {
+            input.put("atomic".getBytes(), new byte[0]);
+        }
+        for (Object key : keys) {
+            byte[] bareKey = keyTranscoder.encode(key);
+            byte[] markedKey = new byte[bareKey.length + 1];
+            markedKey[0] = '_';
+            System.arraycopy(bareKey, 0, markedKey, 1, bareKey.length);
+            input.put(markedKey, new byte[0]);
+        }
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("get_bulk", input));
+        checkError(response);
+        Map<Object, Object> result = new HashMap<Object, Object>();
+        for (KeyValuePair pair : response.output) {
+            if (pair.key[0] == '_') {
+                byte[] bareKey = new byte[pair.key.length - 1];
+                System.arraycopy(pair.key, 1, bareKey, 0, bareKey.length);
+                Object key = keyTranscoder.decode(bareKey);
+                Object value = valueTranscoder.decode(pair.value);
+                result.put(key, value);
+            }
+        }
+        if (result.size() != Long.parseLong(decodeStr(response.output.get(NUM)))) {
+            throw new AssertionError();
+        }
+        return result;
     }
 
     //Utilities

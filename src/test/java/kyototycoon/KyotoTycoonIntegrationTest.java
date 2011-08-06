@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
@@ -208,5 +210,33 @@ public class KyotoTycoonIntegrationTest {
     seize_returns_null_if_record_does_not_exist() {
         assertThat((String) dut.seize("key"), nullValue());
         assertThat(dut.get("key"), nullValue());
+    }
+
+    @Test public void
+    set_bulk_stores_records_at_once() {
+        Map<Object, Object> entries = new HashMap<Object, Object>();
+        entries.put("a", "1");
+        entries.put("b", "2");
+        assertThat(dut.setBulk(entries), is((long) entries.size()));
+        assertThat((String) dut.get("a"), is("1"));
+        assertThat((String) dut.get("b"), is("2"));
+    }
+
+    @Test public void
+    remove_bulk_removes_records_at_once() {
+        dut.set("a", "1");
+        List<Object> keys = Arrays.<Object>asList("a", "b");
+        assertThat(dut.removeBulk(keys), is((long) keys.size() - 1));
+        assertThat((String) dut.get("a"), nullValue());
+        assertThat((String) dut.get("b"), nullValue());
+    }
+
+    @Test public void
+    get_bulk_retrieves_records_at_once() {
+        dut.set("a", "1");
+        List<Object> keys = Arrays.<Object>asList("a", "b");
+        Map<Object, Object> expected = new HashMap<Object, Object>();
+        expected.put("a", "1");
+        assertThat(dut.getBulk(keys), is(expected));
     }
 }

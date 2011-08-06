@@ -2,6 +2,7 @@ package kyototycoon;
 
 import kyototycoon.transcoder.Transcoder;
 
+import java.util.List;
 import java.util.Map;
 
 public interface KyotoTycoonRpc {
@@ -34,4 +35,10 @@ public interface KyotoTycoonRpc {
     Object get(Object key);
     //TODO: How to return xt of a record?
     Object seize(Object key);
+    long setBulk(Map<Object, Object> entries);
+    long setBulk(Map<Object, Object> entries, ExpirationTime xt, boolean atomic);
+    long removeBulk(List<Object> keys);
+    long removeBulk(List<Object> keys, boolean atomic);
+    Map<Object, Object> getBulk(List<Object> keys);
+    Map<Object, Object> getBulk(List<Object> keys, boolean atomic);
 }
