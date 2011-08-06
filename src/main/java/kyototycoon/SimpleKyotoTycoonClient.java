@@ -21,8 +21,8 @@ public class SimpleKyotoTycoonClient extends SimpleKyotoTycoonRpc implements Kyo
         tsvRpc = client;
     }
 
-    public void setHosts(Iterable<URI> addresses) {
-        client.setHosts(addresses);
+    public void setHost(URI address) {
+        client.setHost(address);
     }
 
     public void setRequestTimeout(long timeout, TimeUnit unit) {
