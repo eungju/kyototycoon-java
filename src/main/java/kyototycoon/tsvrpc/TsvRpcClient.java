@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public interface TsvRpcClient extends TsvRpc {
     TsvRpcConnection getConnection();
 
-    void setHosts(Iterable<URI> addresses);
+    void setHost(URI address);
     void setRequestTimeout(long timeout, TimeUnit unit);
     void start();
     void stop();
