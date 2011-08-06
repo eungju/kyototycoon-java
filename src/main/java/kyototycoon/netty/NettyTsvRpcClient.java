@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NettyTsvRpcClient implements TsvRpcClient {
     private ClientBootstrap bootstrap;
-    private Iterable<URI> addresses;
+    private URI address;
     private NettyTsvRpcConnection connection;
 
     public NettyTsvRpcClient() {
@@ -24,8 +24,8 @@ public class NettyTsvRpcClient implements TsvRpcClient {
         bootstrap.setPipelineFactory(new TsvRpcClientPipelineFactory());
     }
 
-    public void setHosts(Iterable<URI> addresses) {
-        this.addresses = addresses;
+    public void setHost(URI address) {
+        this.address = address;
     }
 
     public void setRequestTimeout(long timeout, TimeUnit unit) {
@@ -33,7 +33,7 @@ public class NettyTsvRpcClient implements TsvRpcClient {
     }
 
     public void start() {
-        connection = new NettyTsvRpcConnection(bootstrap, addresses.iterator().next());
+        connection = new NettyTsvRpcConnection(bootstrap, address);
     }
 
     public void stop() {
@@ -42,7 +42,7 @@ public class NettyTsvRpcClient implements TsvRpcClient {
     }
 
     public TsvRpcConnection getConnection() {
-        return new NettyTsvRpcConnection(bootstrap, addresses.iterator().next());
+        return new NettyTsvRpcConnection(bootstrap, address);
     }
 
     public TsvRpcResponse call(TsvRpcRequest request) {
