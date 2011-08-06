@@ -6,8 +6,6 @@ import kyototycoon.tsvrpc.Values;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -17,7 +15,7 @@ public class NettyTsvRpcClientIntegrationTest {
     @Before
     public void beforeEach() {
         dut = new NettyTsvRpcClient();
-        dut.setHosts(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        dut.setHost(KyotoTycoonFixture.SERVER_ADDRESS);
         dut.start();
     }
 
