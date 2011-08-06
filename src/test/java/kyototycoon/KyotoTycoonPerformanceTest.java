@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -18,7 +16,7 @@ public class KyotoTycoonPerformanceTest {
     @Before
     public void beforeEach() throws Exception {
         dut = new SimpleKyotoTycoonClient();
-        dut.setHosts(Arrays.asList(KyotoTycoonFixture.SERVER_ADDRESS));
+        dut.setHost(KyotoTycoonFixture.SERVER_ADDRESS);
         dut.start();
         dut.clear();
     }
