@@ -30,25 +30,29 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     }
 
     public void start() {
+        serviceFactory = buildServiceFactory();
+        service = serviceFactory.service();
+    }
+
+    ServiceFactory<TsvRpcRequest, TsvRpcResponse> buildServiceFactory() {
         ClientBuilder builder = ClientBuilder.get()
                 .codec(new FinagleTsvRpcCodec())
-                .hostConnectionLimit(100);
+                .hostConnectionLimit(1);
         if (requestTimeout != null) {
-            builder.requestTimeout(requestTimeout);
+            builder = builder.requestTimeout(requestTimeout);
         }
         if (address.getScheme().equals("http")) {
-            builder.hosts(new InetSocketAddress(address.getHost(), address.getPort()));
+            builder = builder.hosts(new InetSocketAddress(address.getHost(), address.getPort()));
         } else if (address.getScheme().equals("lb")) {
             List<SocketAddress> addresses = new ArrayList<SocketAddress>();
             for (URI uri : getComponents(address)) {
                 addresses.add(new InetSocketAddress(uri.getHost(), uri.getPort()));
             }
-            builder.hosts(JavaConversions.asScalaBuffer(addresses));
+            builder = builder.hosts(JavaConversions.asScalaBuffer(addresses));
         } else {
             throw new IllegalStateException("Unknown uri scheme " + address);
         }
-        serviceFactory = ClientBuilder.safeBuildFactory(builder);
-        service = serviceFactory.service();
+        return ClientBuilder.safeBuildFactory(builder);
     }
 
     public void stop() {

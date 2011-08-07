@@ -22,20 +22,3 @@ public class FinagleTsvRpcClientTest {
         assertThat(actual, hasItems(URI.create("http://localhost:1978"), URI.create("http://localhost:1979")));
     }
 }
-package kyototycoon.finagle;
-
-import org.junit.Before;
-
-public class FinagleTsvRpcClientTest {
-    private FinagleTsvRpcClient dut;
-
-    @Before
-    public void beforeEach() {
-        dut = new FinagleTsvRpcClient();
-    }
-//
-//    @Test public void get_components() {
-//        List<URI> actual = dut.getComponents(URI.create("lb:(http://localhost:1978,http://localhost:1979)"));
-//        assertThat(actual, hasItems(URI.create("http://localhost:1978"), URI.create("http://localhost:1979")));
-//    }
-}
