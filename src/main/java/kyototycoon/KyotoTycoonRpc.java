@@ -41,4 +41,10 @@ public interface KyotoTycoonRpc {
     long removeBulk(List<Object> keys, boolean atomic);
     Map<Object, Object> getBulk(List<Object> keys);
     Map<Object, Object> getBulk(List<Object> keys, boolean atomic);
+    void vacuum();
+    void vacuum(long step);
+    List<Object> matchPrefix(Object prefix);
+    List<Object> matchPrefix(Object prefix, long max);
+    List<Object> matchRegex(Object regex);
+    List<Object> matchRegex(Object regex, long max);
 }

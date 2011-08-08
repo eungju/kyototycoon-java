@@ -239,4 +239,28 @@ public class KyotoTycoonIntegrationTest {
         expected.put("a", "1");
         assertThat(dut.getBulk(keys), is(expected));
     }
+
+    @Test public void
+    vacuum_scans_the_database_and_eliminate_regions_of_expired_records() throws InterruptedException {
+        dut.set("key", "value", ExpirationTime.after(1));
+        dut.vacuum();
+        assertThat(dut.status().get("count"), is("1"));
+    }
+
+    @Test public void
+    match_prefix_returns_keys_matching_a_prefix_string() {
+        dut.set("a", "1");
+        dut.set("aa", "11");
+        dut.set("b", "2");
+        assertThat(dut.matchPrefix("a"), is(Arrays.<Object>asList("a", "aa")));
+    }
+
+    @Test public void
+    match_regex_returns_keys_matching_a_regular_expression_string() {
+        dut.set("a", "1");
+        dut.set("aa", "11");
+        dut.set("b", "2");
+        dut.set("ba", "21");
+        assertThat(dut.matchRegex(".a"), is(Arrays.<Object>asList("aa", "ba")));
+    }
 }

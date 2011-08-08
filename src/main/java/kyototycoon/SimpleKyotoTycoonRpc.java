@@ -8,6 +8,7 @@ import kyototycoon.tsvrpc.TsvRpcRequest;
 import kyototycoon.tsvrpc.TsvRpcResponse;
 import kyototycoon.tsvrpc.Values;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -273,6 +274,73 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
                 Object key = keyTranscoder.decode(bareKey);
                 Object value = valueTranscoder.decode(pair.value);
                 result.put(key, value);
+            }
+        }
+        if (result.size() != Long.parseLong(decodeStr(response.output.get(NUM)))) {
+            throw new AssertionError();
+        }
+        return result;
+    }
+
+    public void vacuum() {
+        vacuum(0);
+    }
+
+    public void vacuum(long step) {
+        Values input = new Values();
+        if (step > 0) {
+            input.put("step".getBytes(), encodeStr(String.valueOf(step)));
+        }
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("vacuum", input));
+        checkError(response);
+    }
+
+    public List<Object> matchPrefix(Object prefix) {
+        return matchPrefix(prefix, -1);
+    }
+
+    public List<Object> matchPrefix(Object prefix, long max) {
+        Values input = new Values();
+        input.put("prefix".getBytes(), keyTranscoder.encode(prefix));
+        if (max >= 0) {
+            input.put("max".getBytes(), encodeStr(String.valueOf(max)));
+        }
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("match_prefix", input));
+        checkError(response);
+        List<Object> result = new ArrayList<Object>();
+        for (KeyValuePair pair : response.output) {
+            if (pair.key[0] == '_') {
+                byte[] bareKey = new byte[pair.key.length - 1];
+                System.arraycopy(pair.key, 1, bareKey, 0, bareKey.length);
+                Object key = keyTranscoder.decode(bareKey);
+                result.add(key);
+            }
+        }
+        if (result.size() != Long.parseLong(decodeStr(response.output.get(NUM)))) {
+            throw new AssertionError();
+        }
+        return result;
+    }
+
+    public List<Object> matchRegex(Object regex) {
+        return matchRegex(regex, -1);
+    }
+
+    public List<Object> matchRegex(Object prefix, long max) {
+        Values input = new Values();
+        input.put("regex".getBytes(), keyTranscoder.encode(prefix));
+        if (max >= 0) {
+            input.put("max".getBytes(), encodeStr(String.valueOf(max)));
+        }
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("match_regex", input));
+        checkError(response);
+        List<Object> result = new ArrayList<Object>();
+        for (KeyValuePair pair : response.output) {
+            if (pair.key[0] == '_') {
+                byte[] bareKey = new byte[pair.key.length - 1];
+                System.arraycopy(pair.key, 1, bareKey, 0, bareKey.length);
+                Object key = keyTranscoder.decode(bareKey);
+                result.add(key);
             }
         }
         if (result.size() != Long.parseLong(decodeStr(response.output.get(NUM)))) {
