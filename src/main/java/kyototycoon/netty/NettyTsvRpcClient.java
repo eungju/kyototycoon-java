@@ -9,6 +9,7 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import java.net.URI;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class NettyTsvRpcClient implements TsvRpcClient {
@@ -47,5 +48,9 @@ public class NettyTsvRpcClient implements TsvRpcClient {
 
     public TsvRpcResponse call(TsvRpcRequest request) {
         return connection.call(request);
+    }
+
+    public Future<TsvRpcResponse> callAsync(TsvRpcRequest request) {
+        return connection.callAsync(request);
     }
 }
