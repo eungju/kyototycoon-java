@@ -6,17 +6,18 @@ import java.util.List;
 import java.util.Map;
 
 public interface KyotoTycoonRpc {
+    void setKeyTranscoder(Transcoder transcoder);
 	void setValueTranscoder(Transcoder transcoder);
 
     // Common arguments
-    //DB
+    void setTarget(String expression);
 
+    //procedures
     Map<String,String> report();
     Map<String,String> status();
     void clear();
     void synchronize(boolean hard);
     void synchronize(boolean hard, String command);
-
     void set(Object key, Object value, ExpirationTime xt);
     void set(Object key, Object value);
     void add(Object key, Object value, ExpirationTime xt);

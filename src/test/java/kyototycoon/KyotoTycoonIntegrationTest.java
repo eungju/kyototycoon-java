@@ -263,4 +263,11 @@ public class KyotoTycoonIntegrationTest {
         dut.set("ba", "21");
         assertThat(dut.matchRegex(".a"), is(Arrays.<Object>asList("aa", "ba")));
     }
+
+    @Test public void
+    specifies_the_identifier_of_the_target_database_of_each_operation() {
+        dut.set("key", "value");
+        dut.setTarget("*");
+        assertThat(dut.get("key"), nullValue());
+    }
 }
