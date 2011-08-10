@@ -1,5 +1,6 @@
 package kyototycoon;
 
+import kyototycoon.transcoder.Transcoder;
 import kyototycoon.tsvrpc.TsvRpcClient;
 import kyototycoon.tsvrpc.TsvRpcConnection;
 import org.jmock.Expectations;
@@ -26,13 +27,17 @@ public class SimpleKyotoTycoonClientTest {
     }
 
     @Test public void
-    provideConnectionsWhichInheritTranscoders() {
+    connections_inherit_common_parameters() {
         final TsvRpcConnection tsvRpcConn = mockery.mock(TsvRpcConnection.class);
         mockery.checking(new Expectations() {{
             oneOf(underlying).getConnection(); will(returnValue(tsvRpcConn));
         }});
+        dut.setKeyTranscoder(mockery.mock(Transcoder.class, "keyTranscoder"));
+        dut.setValueTranscoder(mockery.mock(Transcoder.class, "valueTranscoder"));
+        dut.setTarget("*");
         SimpleKyotoTycoonConnection conn = (SimpleKyotoTycoonConnection) dut.getConnection();
         assertThat(conn.keyTranscoder, is(dut.keyTranscoder));
         assertThat(conn.valueTranscoder, is(dut.valueTranscoder));
+        assertThat(conn.target, is(dut.target));
     }
 }

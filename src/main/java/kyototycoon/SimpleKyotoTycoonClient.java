@@ -41,6 +41,7 @@ public class SimpleKyotoTycoonClient extends SimpleKyotoTycoonRpc implements Kyo
         SimpleKyotoTycoonConnection connection = new SimpleKyotoTycoonConnection(client.getConnection());
         connection.setKeyTranscoder(keyTranscoder);
         connection.setValueTranscoder(valueTranscoder);
+        connection.setTarget(target);
         return connection;
     }
 }
