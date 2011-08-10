@@ -1,41 +1,43 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>kyototycoon</groupId>
-	<artifactId>kyototycoon</artifactId>
-	<packaging>jar</packaging>
-	<version>0.1-SNAPSHOT</version>
+    <groupId>kyototycoon</groupId>
+    <artifactId>kyototycoon</artifactId>
+    <packaging>jar</packaging>
+    <version>0.1-SNAPSHOT</version>
 
-	<name>Kyoto Tycoon Java Client</name>
-	<description>This module implements the pure Java client which connects to the server of Kyoto Tycoon and speaks its TSV-RPC protocol.</description>
-	<url>http://code.google.com/p/kyototycoon-java</url>
+    <name>Kyoto Tycoon Java Client</name>
+    <description>
+        This module implements the pure Java client which connects to the server of Kyoto Tycoon and speaks its TSV-RPC protocol.
+    </description>
+    <url>http://code.google.com/p/kyototycoon-java</url>
 
-	<scm>
-		<connection>scm:hg:http://bitbucket.org/EP/kyototycoon-java/</connection>
-		<developerConnection>scm:hg:https://bitbucket.org/EP/kyototycoon-java/</developerConnection>
-		<url>http://www.bitbucket.org/EP/kyototycoon-java/</url>
-	</scm>
+    <scm>
+        <connection>scm:hg:http://bitbucket.org/EP/kyototycoon-java/</connection>
+        <developerConnection>scm:hg:https://bitbucket.org/EP/kyototycoon-java/</developerConnection>
+        <url>http://www.bitbucket.org/EP/kyototycoon-java/</url>
+    </scm>
 
-	<issueManagement>
-		<url>http://code.google.com/p/kyototycoon-java/issues/</url>
-	</issueManagement>
+    <issueManagement>
+        <url>http://code.google.com/p/kyototycoon-java/issues/</url>
+    </issueManagement>
 
-	<developers>
-		<developer>
-			<id>eungju</id>
-			<name>Eungju PARK</name>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>eungju</id>
+            <name>Eungju PARK</name>
+        </developer>
+    </developers>
 
-	<licenses>
-		<license>
-			<name>Apache License 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
 
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -54,128 +56,125 @@
         </dependency>
 
         <dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock</artifactId>
-			<version>${jmock.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-legacy</artifactId>
-			<version>${jmock.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-junit4</artifactId>
-			<version>${jmock.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock</artifactId>
+            <version>${jmock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-legacy</artifactId>
+            <version>${jmock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-junit4</artifactId>
+            <version>${jmock.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<debug>true</debug>
-					<optimize>true</optimize>
-					<showDeprecation>true</showDeprecation>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-					<encoding>${maven.compiler.encoding}</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadoc</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <debug>true</debug>
+                    <optimize>true</optimize>
+                    <showDeprecation>true</showDeprecation>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${maven.compiler.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>undercover</groupId>
-				<artifactId>undercover-maven-plugin</artifactId>
-				<configuration>
-                    <excludes>
-                        <exclude>util/Base64</exclude>
-                    </excludes>
-					<formats>
-						<format>html</format>
-						<format>coberturaxml</format>
-						<format>emmaxml</format>
-					</formats>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<charset>${maven.compiler.encoding}</charset>
-					<docencoding>${maven.compiler.encoding}</docencoding>
-					<encoding>${maven.compiler.encoding}</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jdepend-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<configuration>
-					<sourceEncoding>${maven.compiler.encoding}</sourceEncoding>
-					<minimumTokens>50</minimumTokens>
-					<includeTests>true</includeTests>
-					<targetJdk>${maven.compiler.target}</targetJdk>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</reporting>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>undercover</groupId>
+                <artifactId>undercover-maven-plugin</artifactId>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                        <format>coberturaxml</format>
+                        <format>emmaxml</format>
+                    </formats>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <charset>${maven.compiler.encoding}</charset>
+                    <docencoding>${maven.compiler.encoding}</docencoding>
+                    <encoding>${maven.compiler.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <sourceEncoding>${maven.compiler.encoding}</sourceEncoding>
+                    <minimumTokens>50</minimumTokens>
+                    <includeTests>true</includeTests>
+                    <targetJdk>${maven.compiler.target}</targetJdk>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <repositories>
         <repository>
@@ -213,12 +212,12 @@
         </snapshotRepository>
     </distributionManagement>
 
-	<properties>
-		<maven.compiler.encoding>utf-8</maven.compiler.encoding>
-		<maven.compiler.target>1.5</maven.compiler.target>
-		<maven.compiler.source>1.5</maven.compiler.source>
+    <properties>
+        <maven.compiler.encoding>utf-8</maven.compiler.encoding>
+        <maven.compiler.target>1.5</maven.compiler.target>
+        <maven.compiler.source>1.5</maven.compiler.source>
         <slf4j.version>1.6.1</slf4j.version>
-		<jmock.version>2.5.1</jmock.version>
-	</properties>
+        <jmock.version>2.5.1</jmock.version>
+    </properties>
 
 </project>
