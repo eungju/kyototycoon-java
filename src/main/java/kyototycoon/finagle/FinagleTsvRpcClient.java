@@ -56,7 +56,9 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     }
 
     public void stop() {
-        serviceFactory.close();
+        if (serviceFactory != null) {
+            serviceFactory.close();
+        }
     }
 
     public TsvRpcConnection getConnection() {
