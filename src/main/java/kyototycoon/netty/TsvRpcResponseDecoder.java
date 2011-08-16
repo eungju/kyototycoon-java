@@ -22,9 +22,7 @@ public class TsvRpcResponseDecoder extends OneToOneDecoder {
         HttpResponseStatus status = httpResponse.getStatus();
         TsvEncoding tsvEncoding = TsvEncodingHelper.forContentType(httpResponse.getHeader(HttpHeaders.Names.CONTENT_TYPE));
         ChannelBuffer content = httpResponse.getContent();
-        byte[] buf = new byte[content.readableBytes()];
-        content.readBytes(buf);
-        Values output = tsvEncoding.decode(buf);
+        Values output = tsvEncoding.decode(content);
         return new TsvRpcResponse(status.getCode(), output);
     }
 }

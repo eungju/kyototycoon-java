@@ -1,6 +1,8 @@
 package kyototycoon.tsvrpc;
 
-import java.io.ByteArrayOutputStream;
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBufferIndexFinder;
+import org.jboss.netty.buffer.ChannelBuffers;
 
 public class TsvEncoding {
     public final String contentType;
@@ -11,32 +13,70 @@ public class TsvEncoding {
         this.valueEncoding = valueEncoding;
     }
 
-    public byte[] encode(Values input) {
+    static final byte[] COLUMN_SEPARATOR = new byte[] { '\t' };
+    static final byte[] ROW_SEPARATOR = new byte[] { '\r', '\n' };
+    public ChannelBuffer encode(Values input) {
         try {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            TsvWriter writer = new TsvWriter(buffer);
+            ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
             for (KeyValuePair each : input) {
-                writer.writeKey(valueEncoding.encode(each.key));
-                writer.writeTab();
-                writer.writeValue(valueEncoding.encode(each.value));
-                writer.writeEol();
+                buffer.writeBytes(valueEncoding.encode(each.key));
+                buffer.writeBytes(COLUMN_SEPARATOR);
+                buffer.writeBytes(valueEncoding.encode(each.value));
+                buffer.writeBytes(ROW_SEPARATOR);
             }
-            return buffer.toByteArray();
+            return buffer;
         } catch (Exception e) {
             throw new RuntimeException("Error while encoding " + input, e);
         }
     }
 
-    public Values decode(byte[] input) {
+    static final ChannelBufferIndexFinder COLUMN_SEPARATOR_FINDER = new ChannelBufferIndexFinder() {
+        public boolean find(ChannelBuffer buffer, int guessedIndex) {
+            byte b = buffer.getByte(guessedIndex);
+            return b == '\t' || b == '\r' || b == '\n';
+        }
+    };
+    static final ChannelBufferIndexFinder COLUMN_FINDER = new ChannelBufferIndexFinder() {
+        public boolean find(ChannelBuffer buffer, int guessedIndex) {
+            return buffer.getByte(guessedIndex) != '\t';
+        }
+    };
+    static final ChannelBufferIndexFinder ROW_SEPARATOR_FINDER = new ChannelBufferIndexFinder() {
+        public boolean find(ChannelBuffer buffer, int guessedIndex) {
+            byte b = buffer.getByte(guessedIndex);
+            return b == '\r' || b == '\n';
+        }
+    };
+    static final ChannelBufferIndexFinder ROW_FINDER = new ChannelBufferIndexFinder() {
+        public boolean find(ChannelBuffer buffer, int guessedIndex) {
+            byte b = buffer.getByte(guessedIndex);
+            return !(b == '\r' || b == '\n');
+        }
+    };
+
+    public Values decode(ChannelBuffer input) {
         try {
             Values result = new Values();
-            TsvReader reader = new TsvReader(input);
-            while (reader.hasRemaining()) {
-                byte[] key = valueEncoding.decode(reader.readKey());
-                reader.readTab();
-                byte[] value = valueEncoding.decode(reader.readValue());
-                reader.readEol();
-                result.put(key, value);
+            while (input.readable()) {
+                int ksize = input.bytesBefore(COLUMN_SEPARATOR_FINDER);
+                ksize = ksize == -1 ? input.readableBytes() : ksize;
+                byte[] key = new byte[ksize];
+                input.readBytes(key);
+
+                int tsize = input.bytesBefore(COLUMN_FINDER);
+                tsize = tsize == -1 ? input.readableBytes() : tsize;
+                input.readerIndex(input.readerIndex() + tsize);
+
+                int vsize = input.bytesBefore(ROW_SEPARATOR_FINDER);
+                vsize = vsize == -1 ? input.readableBytes() : vsize;
+                byte[] value = new byte[vsize];
+                input.readBytes(value);
+
+                int lsize = input.bytesBefore(ROW_FINDER);
+                lsize = lsize == -1 ? input.readableBytes() : lsize;
+                input.readerIndex(input.readerIndex() + lsize);
+
+                result.put(valueEncoding.decode(key), valueEncoding.decode(value));
             }
             return result;
         } catch (Exception e) {

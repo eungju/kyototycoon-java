@@ -4,7 +4,6 @@ import kyototycoon.tsvrpc.TsvEncoding;
 import kyototycoon.tsvrpc.TsvEncodingHelper;
 import kyototycoon.tsvrpc.TsvRpcRequest;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
@@ -28,7 +27,7 @@ public class TsvRpcRequestEncoder extends OneToOneEncoder {
         httpRequest.setHeader(HttpHeaders.Names.HOST, remoteAddress.getHostName() + ":" + remoteAddress.getPort());
         httpRequest.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         TsvEncoding tsvEncoding = TsvEncodingHelper.forEfficiency(request.input);
-        ChannelBuffer content = ChannelBuffers.wrappedBuffer(tsvEncoding.encode(request.input));
+        ChannelBuffer content = tsvEncoding.encode(request.input);
         httpRequest.setHeader(HttpHeaders.Names.CONTENT_TYPE, tsvEncoding.contentType);
         httpRequest.setHeader(HttpHeaders.Names.CONTENT_LENGTH, content.readableBytes());
         httpRequest.setContent(content);
