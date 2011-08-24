@@ -37,7 +37,7 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     ServiceFactory<TsvRpcRequest, TsvRpcResponse> buildServiceFactory() {
         ClientBuilder builder = ClientBuilder.get()
                 .codec(new FinagleTsvRpcCodec())
-                .hostConnectionLimit(1);
+                .hostConnectionLimit(10);
         if (requestTimeout != null) {
             builder = builder.requestTimeout(requestTimeout);
         }
