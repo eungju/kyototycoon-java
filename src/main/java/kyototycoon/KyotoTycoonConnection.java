@@ -11,4 +11,5 @@ public interface KyotoTycoonConnection extends KyotoTycoonRpc {
     //SIGNALBROAD
     
     // Cursor operations
+    Cursor cursor();
 }

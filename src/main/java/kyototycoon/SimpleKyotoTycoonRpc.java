@@ -31,6 +31,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         byte[] REGEX = "regex".getBytes();
         byte[] ERROR = "ERROR".getBytes();
         byte[] DB = "DB".getBytes();
+        byte[] CUR = "CUR".getBytes();
     }
 
     protected Transcoder keyTranscoder = StringTranscoder.INSTANCE;
@@ -391,7 +392,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         byte[] error = response.output.get(Names.ERROR);
         String message = (error == null || error.length == 0)
                 ? "HTTP Status Code is " + response.status
-                : decodeStr(error);
+                : decodeStr(error) + "(" + response.status + ")";
         throw new KyotoTycoonException(message);
     }
 
