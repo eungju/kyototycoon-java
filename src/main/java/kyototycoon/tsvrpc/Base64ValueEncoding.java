@@ -1,18 +1,15 @@
 package kyototycoon.tsvrpc;
 
-import org.apache.commons.codec.binary.Base64;
+import util.Base64;
 
 import java.io.IOException;
 
-/**
- * TODO: optimize BASE64 encoding.
- */
 public class Base64ValueEncoding implements ValueEncoding {
     public byte[] encode(byte[] value) throws IOException {
-        return new Base64().encode(value);
+        return Base64.encodeToByte(value, false);
     }
 
     public byte[] decode(byte[] value) throws IOException {
-        return new Base64().decode(value);
+        return Base64.decodeFast(value);
     }
 }
