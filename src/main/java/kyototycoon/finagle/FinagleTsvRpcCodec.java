@@ -10,9 +10,12 @@ import kyototycoon.tsvrpc.TsvRpcResponse;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpClientCodec;
 
 public class FinagleTsvRpcCodec implements Codec<TsvRpcRequest, TsvRpcResponse> {
+    private static final int MAX_CONTENT_LENGTH = 1024 * 1024;
+
     public Future<Service<TsvRpcRequest, TsvRpcResponse>> prepareService(Service<TsvRpcRequest, TsvRpcResponse> underlying) {
         //return Future.value(underlying);
         return Codec$class.prepareService(this, underlying);
@@ -23,6 +26,7 @@ public class FinagleTsvRpcCodec implements Codec<TsvRpcRequest, TsvRpcResponse> 
             public ChannelPipeline getPipeline() throws Exception {
                 ChannelPipeline pipeline = Channels.pipeline();
                 pipeline.addLast("http", new HttpClientCodec());
+                pipeline.addLast("http-aggregator", new HttpChunkAggregator(MAX_CONTENT_LENGTH));
                 pipeline.addLast("tsvrpc", new TsvRpcClientCodec());
                 return pipeline;
             }
