@@ -43,7 +43,9 @@ public class SimpleKyotoTycoonConnection extends SimpleKyotoTycoonRpc implements
                 Values input = new Values();
                 setCursorParameter(input);
                 TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("cur_delete", input));
-                checkError(response);
+                if (response.status != 450) {
+                    checkError(response);
+                }
                 cursors.remove(this);
             }
 
@@ -52,13 +54,51 @@ public class SimpleKyotoTycoonConnection extends SimpleKyotoTycoonRpc implements
             }
 
             public void jump(Object key) {
-                Values input = createInputWithTarget();
+                Values input = new Values();
+                setDbParameter(input);
                 setCursorParameter(input);
                 if (key != null) {
                     input.put(Names.KEY, keyTranscoder.encode(key));
                 }
                 TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("cur_jump", input));
                 checkError(response);
+            }
+
+            public void jumpBack() {
+                jumpBack(null);
+            }
+
+            public void jumpBack(Object key) {
+                Values input = new Values();
+                setDbParameter(input);
+                setCursorParameter(input);
+                if (key != null) {
+                    input.put(Names.KEY, keyTranscoder.encode(key));
+                }
+                TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("cur_jump_back", input));
+                checkError(response);
+            }
+
+            public boolean step() {
+                Values input = new Values();
+                setCursorParameter(input);
+                TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("cur_step", input));
+                if (response.status == 450) {
+                    return false;
+                }
+                checkError(response);
+                return true;
+            }
+
+            public boolean stepBack() {
+                Values input = new Values();
+                setCursorParameter(input);
+                TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("cur_step_back", input));
+                if (response.status == 450) {
+                    return false;
+                }
+                checkError(response);
+                return true;
             }
 
             public Map.Entry<Object, Object> get(boolean step) {
@@ -86,6 +126,21 @@ public class SimpleKyotoTycoonConnection extends SimpleKyotoTycoonRpc implements
                         throw new UnsupportedOperationException();
                     }
                 };
+            }
+
+            public Object getKey() {
+                return getKey(false);
+            }
+
+            public Object getKey(boolean step) {
+                Values input = new Values();
+                setCursorParameter(input);
+                if (step) {
+                    input.put(Names.STEP, encodeStr(String.valueOf(step)));
+                }
+                TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("cur_get_key", input));
+                checkError(response);
+                return valueTranscoder.decode(response.output.get(Names.KEY));
             }
 
             void setCursorParameter(Values input) {

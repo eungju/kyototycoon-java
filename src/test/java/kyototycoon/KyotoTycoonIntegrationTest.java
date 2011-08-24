@@ -13,8 +13,12 @@ import java.util.Map;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+/**
+ * Run <code>ktserver '+' '-'</code>
+ */
 public class KyotoTycoonIntegrationTest {
     private SimpleKyotoTycoonClient dut;
+    private KyotoTycoonConnection conn;
 
     @Before
     public void beforeEach() throws Exception {
@@ -22,10 +26,12 @@ public class KyotoTycoonIntegrationTest {
         dut.setHost(KyotoTycoonFixture.SERVER_ADDRESS);
         dut.start();
         dut.clear();
+        conn = dut.getConnection();
     }
 
     @After
     public void afterEach() {
+        conn.close();
         dut.stop();
     }
 
@@ -267,7 +273,83 @@ public class KyotoTycoonIntegrationTest {
     @Test public void
     specifies_the_identifier_of_the_target_database_of_each_operation() {
         dut.set("key", "value");
-        dut.setTarget("*");
+        dut.setTarget("-");
         assertThat(dut.get("key"), nullValue());
+    }
+
+    @Test public void
+    cursor_jumps_to_the_first_record_for_forward_scan() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jump();
+        assertThat((String) c.getKey(), is("a"));
+        c.close();
+    }
+
+    @Test(expected=KyotoTycoonException.class) public void
+    cursor_can_not_jump_to_a_non_existing_record() {
+        Cursor c = conn.cursor();
+        c.jump();
+        c.close();
+    }
+
+    @Test(expected=KyotoTycoonException.class) public void
+    invalidated_cursor_can_not_jump() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.close();
+        c.jump();
+    }
+
+    @Test public void
+    cursor_jumps_to_the_last_record_for_backward_scan() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jumpBack();
+        assertThat((String) c.getKey(), is("b"));
+        c.close();
+    }
+
+    @Test(expected=KyotoTycoonException.class) public void
+    cursor_can_not_jump_back_to_a_non_existing_record() {
+        Cursor c = conn.cursor();
+        c.jumpBack();
+        c.close();
+    }
+
+    @Test(expected=KyotoTycoonException.class) public void
+    invalidated_cursor_can_not_jump_back() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.close();
+        c.jumpBack();
+    }
+
+    @Test public void
+    cursor_steps_to_the_next_record() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jump();
+        assertThat(c.step(), is(true));
+        assertThat((String) c.getKey(), is("b"));
+        assertThat(c.step(), is(false));
+        c.close();
+    }
+
+    @Test public void
+    cursor_steps_back_to_the_previous_record() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jumpBack();
+        assertThat(c.stepBack(), is(true));
+        assertThat((String) c.getKey(), is("a"));
+        assertThat(c.stepBack(), is(false));
+        c.close();
     }
 }

@@ -403,4 +403,10 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         }
         return input;
     }
+
+    void setDbParameter(Values input) {
+        if (target != null) {
+            input.put(Names.DB, encodeStr(target));
+        }
+    }
 }
