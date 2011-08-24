@@ -3,7 +3,6 @@ package kyototycoon.benchmark;
 import kyototycoon.KyotoTycoonFixture;
 import kyototycoon.netty.NettyTsvRpcClient;
 import kyototycoon.tsvrpc.TsvRpcRequest;
-import kyototycoon.tsvrpc.TsvRpcResponse;
 import kyototycoon.tsvrpc.Values;
 
 import static org.junit.Assert.*;
@@ -17,7 +16,6 @@ public class NettyNetworkingBenchmark {
         input.put("key".getBytes(), "1234567890".getBytes());
         input.put("value".getBytes(), "1234567890".getBytes());
         final TsvRpcRequest request = new TsvRpcRequest("echo", input);
-        final TsvRpcResponse response = new TsvRpcResponse(200, request.input);
 		Runnable task = new Runnable() {
 			public void run() {
                 assertEquals(input, db.call(request).output);
