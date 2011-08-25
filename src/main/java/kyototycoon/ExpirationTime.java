@@ -17,6 +17,14 @@ public class ExpirationTime {
 	public boolean isEnabled() {
 		return this != NONE;
 	}
+
+    public String toString() {
+        if (isEnabled()) {
+            return value < 0 ? "At " + Math.abs(value) : "After " + value;
+        } else {
+            return "NONE";
+        }
+    }
 	
 	public static ExpirationTime after(long ttl) {
 		return new ExpirationTime(ttl);

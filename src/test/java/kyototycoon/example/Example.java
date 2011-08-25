@@ -2,10 +2,10 @@ package kyototycoon.example;
 
 import kyototycoon.Cursor;
 import kyototycoon.KyotoTycoonConnection;
+import kyototycoon.Record;
 import kyototycoon.SimpleKyotoTycoonClient;
 
 import java.net.URI;
-import java.util.Map;
 
 public class Example {
     public static void main(String[] args) {
@@ -30,9 +30,9 @@ public class Example {
             Cursor cur = conn.cursor();
             try {
                 cur.jump();
-                Map.Entry<Object, Object> record;
+                Record record;
                 while ((record = cur.get(true)) != null) {
-                  System.out.println(record.getKey() + ":" + record.getValue());
+                  System.out.println(record.key + ":" + record.value + "," + record.xt);
                 }
             } finally {
                 cur.close();

@@ -1,7 +1,5 @@
 package kyototycoon;
 
-import java.util.Map;
-
 public interface Cursor {
     void close();
 
@@ -11,7 +9,14 @@ public interface Cursor {
     void jumpBack(Object key);
     boolean step();
     boolean stepBack();
+    void setValue(Object value);
+    void setValue(Object value, ExpirationTime xt, boolean step);
+    boolean remove();
     Object getKey();
     Object getKey(boolean step);
-    Map.Entry<Object,Object> get(boolean step);
+    Object getValue();
+    Object getValue(boolean step);
+    Record get();
+    Record get(boolean step);
+    Record seize();
 }

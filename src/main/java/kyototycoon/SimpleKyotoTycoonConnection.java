@@ -25,7 +25,7 @@ public class SimpleKyotoTycoonConnection extends SimpleKyotoTycoonRpc implements
             try {
                 cursor.close();
             } catch (Exception e) {
-                logger.warn("Error while closing cursor", e);
+                logger.warn("Error while closing a cursor", e);
             }
         }
         connection.close();
@@ -35,4 +35,7 @@ public class SimpleKyotoTycoonConnection extends SimpleKyotoTycoonRpc implements
         return new SimpleCursor(this);
     }
 
+    long generateCursorId() {
+        return ++cursorCount;
+    }
 }

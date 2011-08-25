@@ -352,4 +352,84 @@ public class KyotoTycoonIntegrationTest {
         assertThat(c.stepBack(), is(false));
         c.close();
     }
+
+    @Test public void
+    cursor_sets_the_value_of_the_current_record() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jump();
+        c.setValue("3");
+        assertThat((String) c.getKey(), is("a"));
+        c.setValue("4", ExpirationTime.NONE, true);
+        assertThat((String) c.getKey(), is("b"));
+        c.setValue("5", ExpirationTime.NONE, true);
+        c.close();
+    }
+
+    @Test public void
+    cursor_remove_the_current_record() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jump();
+        assertThat(c.remove(), is(true));
+        assertThat((String) c.getKey(), is("b"));
+        assertThat(c.remove(), is(true));
+        assertThat(c.remove(), is(false));
+        c.close();
+    }
+
+    @Test public void
+    cursor_gets_the_key_of_the_current_record() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jump();
+        assertThat((String)c.getKey(), is("a"));
+        assertThat((String)c.getKey(true), is("a"));
+        assertThat((String)c.getKey(true), is("b"));
+        assertThat(c.getKey(true), nullValue());
+        c.close();
+    }
+
+    @Test public void
+    cursor_gets_the_value_of_the_current_record() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jump();
+        assertThat((String)c.getValue(), is("1"));
+        assertThat((String)c.getValue(true), is("1"));
+        assertThat((String)c.getValue(true), is("2"));
+        assertThat(c.getValue(true), nullValue());
+        c.close();
+    }
+
+    @Test public void
+    cursor_gets_a_pair_of_the_key_and_the_value_of_the_current_record() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jump();
+        assertThat(c.get(), is(new Record("a", "1")));
+        assertThat(c.get(true), is(new Record("a", "1")));
+        assertThat(c.get(true), is(new Record("b", "2")));
+        assertThat(c.get(true), nullValue());
+        c.close();
+    }
+
+    @Test public void
+    cursor_gets_a_pair_of_the_key_and_the_value_of_the_current_record_and_remove_it_atomically() {
+        dut.set("a", "1");
+        dut.set("b", "2");
+        Cursor c = conn.cursor();
+        c.jump();
+        assertThat(c.seize(), is(new Record("a", "1")));
+        assertThat(dut.get("a"), nullValue());
+        assertThat(c.seize(), is(new Record("b", "2")));
+        assertThat(dut.get("a"), nullValue());
+        assertThat(c.seize(), nullValue());
+        c.close();
+    }
 }

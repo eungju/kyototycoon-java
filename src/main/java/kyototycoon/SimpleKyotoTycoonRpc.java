@@ -90,8 +90,9 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     
     public void set(Object key, Object value, ExpirationTime xt) {
         Values input = createInputWithTarget();
-        putKeyAndValue(input, key, value);
-        putExpirationTime(input, xt);
+        setKeyParameter(input, key);
+        setValueParameter(input, value);
+        setExpirationTimeParameter(input, xt);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("set", input));
         checkError(response);
     }
@@ -102,8 +103,9 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
 
     public void add(Object key, Object value, ExpirationTime xt) {
         Values input = createInputWithTarget();
-        putKeyAndValue(input, key, value);
-        putExpirationTime(input, xt);
+        setKeyParameter(input, key);
+        setValueParameter(input, value);
+        setExpirationTimeParameter(input, xt);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("add", input));
         checkError(response);
     }
@@ -114,8 +116,9 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
 
     public void replace(Object key, Object value, ExpirationTime xt) {
         Values input = createInputWithTarget();
-        putKeyAndValue(input, key, value);
-        putExpirationTime(input, xt);
+        setKeyParameter(input, key);
+        setValueParameter(input, value);
+        setExpirationTimeParameter(input, xt);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("replace", input));
         checkError(response);
     }
@@ -126,8 +129,9 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
 
     public void append(Object key, Object value, ExpirationTime xt) {
         Values input = createInputWithTarget();
-        putKeyAndValue(input, key, value);
-        putExpirationTime(input, xt);
+        setKeyParameter(input, key);
+        setValueParameter(input, value);
+        setExpirationTimeParameter(input, xt);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("append", input));
         checkError(response);
     }
@@ -137,13 +141,15 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public long increment(Object key, long num, IncrementOrigin orig, ExpirationTime xt) {
-        Values input = createInputWithTarget().put(Names.KEY, keyTranscoder.encode(key)).put(Names.NUM, encodeStr(String.valueOf(num)));
+        Values input = createInputWithTarget();
+        setKeyParameter(input, key);
+        input.put(Names.NUM, encodeStr(String.valueOf(num)));
         if (orig == IncrementOrigin.SET) {
             input.put(Names.ORIG, encodeStr(String.valueOf(Long.MAX_VALUE)));
         } else if (orig == IncrementOrigin.TRY) {
             input.put(Names.ORIG, encodeStr(String.valueOf(Long.MIN_VALUE)));
         }
-        putExpirationTime(input, xt);
+        setExpirationTimeParameter(input, xt);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment", input));
         checkError(response);
         return Long.parseLong(decodeStr(response.output.get(Names.NUM)));
@@ -154,13 +160,15 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public double incrementDouble(Object key, double num, IncrementOrigin orig, ExpirationTime xt) {
-        Values input = createInputWithTarget().put(Names.KEY, keyTranscoder.encode(key)).put(Names.NUM, encodeStr(String.valueOf(num)));
+        Values input = createInputWithTarget();
+        setKeyParameter(input, key);
+        input.put(Names.NUM, encodeStr(String.valueOf(num)));
         if (orig == IncrementOrigin.SET) {
             input.put(Names.ORIG, encodeStr(String.valueOf(Double.POSITIVE_INFINITY)));
         } else if (orig == IncrementOrigin.TRY) {
             input.put(Names.ORIG, encodeStr(String.valueOf(Double.NEGATIVE_INFINITY)));
         }
-        putExpirationTime(input, xt);
+        setExpirationTimeParameter(input, xt);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("increment_double", input));
         checkError(response);
         return Double.parseDouble(decodeStr(response.output.get(Names.NUM)));
@@ -171,14 +179,15 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public boolean cas(Object key, Object oval, Object nval, ExpirationTime xt) {
-        Values input = createInputWithTarget().put(Names.KEY, keyTranscoder.encode(key));
+        Values input = createInputWithTarget();
+        setKeyParameter(input, key);
         if (oval != null) {
             input.put(Names.OVAL, valueTranscoder.encode(oval));
         }
         if (nval != null) {
             input.put(Names.NVAL, valueTranscoder.encode(nval));
         }
-        putExpirationTime(input, xt);
+        setExpirationTimeParameter(input, xt);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("cas", input));
         if (response.status == 450) {
             return false;
@@ -188,7 +197,8 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public boolean remove(Object key) {
-        Values input = createInputWithTarget().put(Names.KEY, keyTranscoder.encode(key));
+        Values input = createInputWithTarget();
+        setKeyParameter(input, key);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("remove", input));
         if (response.status == 450) {
             return false;
@@ -198,22 +208,25 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public Object get(Object key) {
-        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("get", createInputWithTarget().put(Names.KEY, keyTranscoder.encode(key))));
+        Values input = createInputWithTarget();
+        setKeyParameter(input, key);
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("get", input));
         if (response.status == 450) {
             return null;
         }
         checkError(response);
-        return valueTranscoder.decode(response.output.get(Names.VALUE));
+        return getValueParameter(response.output);
     }
 
     public Object seize(Object key) {
-        Values input = createInputWithTarget().put(Names.KEY, keyTranscoder.encode(key));
+        Values input = createInputWithTarget();
+        setKeyParameter(input, key);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("seize", input));
         if (response.status == 450) {
             return null;
         }
         checkError(response);
-        return valueTranscoder.decode(response.output.get(Names.VALUE));
+        return getValueParameter(response.output);
     }
 
     public long setBulk(Map<Object, Object> entries) {
@@ -222,7 +235,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
 
     public long setBulk(Map<Object, Object> entries, ExpirationTime xt, boolean atomic) {
         Values input = createInputWithTarget();
-        putExpirationTime(input, xt);
+        setExpirationTimeParameter(input, xt);
         if (atomic) {
             input.put(Names.ATOMIC, new byte[0]);
         }
@@ -375,11 +388,27 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         return new String(b);
     }
 
-    void putKeyAndValue(Values values, Object key, Object value) {
-        values.put(Names.KEY, keyTranscoder.encode(key)).put(Names.VALUE, valueTranscoder.encode(value));
+    Values createInputWithTarget() {
+        Values input = new Values();
+        setDbParameter(input);
+        return input;
     }
 
-    void putExpirationTime(Values values, ExpirationTime xt) {
+    void setDbParameter(Values input) {
+        if (target != null) {
+            input.put(Names.DB, encodeStr(target));
+        }
+    }
+
+    void setKeyParameter(Values input, Object key) {
+        input.put(Names.KEY, keyTranscoder.encode(key));
+    }
+
+    void setValueParameter(Values input, Object value) {
+        input.put(Names.VALUE, valueTranscoder.encode(value));
+    }
+
+    void setExpirationTimeParameter(Values values, ExpirationTime xt) {
         if (xt.isEnabled()) {
             values.put(Names.XT, encodeStr(String.valueOf(xt.getValue())));
         }
@@ -396,17 +425,19 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         throw new KyotoTycoonException(message);
     }
 
-    Values createInputWithTarget() {
-        Values input = new Values();
-        if (target != null) {
-            input.put(Names.DB, encodeStr(target));
-        }
-        return input;
+    Object getKeyParameter(Values output) {
+        return keyTranscoder.decode(output.get(Names.KEY));
     }
 
-    void setDbParameter(Values input) {
-        if (target != null) {
-            input.put(Names.DB, encodeStr(target));
+    Object getValueParameter(Values output) {
+        return valueTranscoder.decode(output.get(Names.VALUE));
+    }
+
+    ExpirationTime getExpirationTimeParameter(Values output) {
+        byte[] bytes = output.get(Names.XT);
+        if (bytes == null || bytes.length == 0) {
+            return ExpirationTime.NONE;
         }
+        return ExpirationTime.at(Long.parseLong(decodeStr(bytes)));
     }
 }
