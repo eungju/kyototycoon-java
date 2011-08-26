@@ -408,9 +408,9 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         input.put(Names.VALUE, valueTranscoder.encode(value));
     }
 
-    void setExpirationTimeParameter(Values values, ExpirationTime xt) {
+    void setExpirationTimeParameter(Values input, ExpirationTime xt) {
         if (xt.isEnabled()) {
-            values.put(Names.XT, encodeStr(String.valueOf(xt.getValue())));
+            input.put(Names.XT, encodeStr(String.valueOf(xt.getValue())));
         }
     }
 

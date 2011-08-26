@@ -11,11 +11,26 @@ public class KeyValuePair {
         this.value = value;
     }
 
+    @Override
     public boolean equals(Object o) {
-        KeyValuePair other = (KeyValuePair) o;
-        return Arrays.equals(key, other.key) && Arrays.equals(value, other.value);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        KeyValuePair that = (KeyValuePair) o;
+
+        if (!Arrays.equals(key, that.key)) return false;
+        if (!Arrays.equals(value, that.value)) return false;
+
+        return true;
     }
-    
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(key);
+        result = 31 * result + (value != null ? Arrays.hashCode(value) : 0);
+        return result;
+    }
+
     @Override
     public String toString() {
     	return new String(key) + "=" + new String(value);
