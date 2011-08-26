@@ -8,11 +8,10 @@ class SimpleCursor implements Cursor {
     private final SimpleKyotoTycoonConnection connection;
     private final long id;
 
-    public SimpleCursor(SimpleKyotoTycoonConnection connection) {
+    public SimpleCursor(SimpleKyotoTycoonConnection connection, int id) {
         this.connection = connection;
-        id = connection.generateCursorId();
+        this.id = ((long) id << 48) | ((System.currentTimeMillis() & 0xFFFF) << 32) | this.hashCode();
     }
-
 
     public void close() {
         Values input = new Values();

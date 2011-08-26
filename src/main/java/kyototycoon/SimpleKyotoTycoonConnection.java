@@ -32,10 +32,6 @@ public class SimpleKyotoTycoonConnection extends SimpleKyotoTycoonRpc implements
     }
 
     public Cursor cursor() {
-        return new SimpleCursor(this);
-    }
-
-    long generateCursorId() {
-        return ++cursorCount;
+        return new SimpleCursor(this, ++cursorCount);
     }
 }
