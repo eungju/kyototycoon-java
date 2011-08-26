@@ -3,14 +3,14 @@ package kyototycoon;
 public interface Cursor {
     void close();
 
-    void jump();
-    void jump(Object key);
-    void jumpBack();
-    void jumpBack(Object key);
+    boolean jump();
+    boolean jump(Object key);
+    boolean jumpBack();
+    boolean jumpBack(Object key);
     boolean step();
     boolean stepBack();
-    void setValue(Object value);
-    void setValue(Object value, ExpirationTime xt, boolean step);
+    boolean setValue(Object value);
+    boolean setValue(Object value, ExpirationTime xt, boolean step);
     boolean remove();
     Object getKey();
     Object getKey(boolean step);

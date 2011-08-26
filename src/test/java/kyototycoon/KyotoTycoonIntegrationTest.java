@@ -282,25 +282,16 @@ public class KyotoTycoonIntegrationTest {
         dut.set("a", "1");
         dut.set("b", "2");
         Cursor c = conn.cursor();
-        c.jump();
+        assertThat(c.jump(), is(true));
         assertThat((String) c.getKey(), is("a"));
         c.close();
     }
 
-    @Test(expected=KyotoTycoonException.class) public void
+    @Test public void
     cursor_can_not_jump_to_a_non_existing_record() {
         Cursor c = conn.cursor();
-        c.jump();
+        assertThat(c.jump(), is(false));
         c.close();
-    }
-
-    @Test(expected=KyotoTycoonException.class) public void
-    invalidated_cursor_can_not_jump() {
-        dut.set("a", "1");
-        dut.set("b", "2");
-        Cursor c = conn.cursor();
-        c.close();
-        c.jump();
     }
 
     @Test public void
@@ -308,25 +299,16 @@ public class KyotoTycoonIntegrationTest {
         dut.set("a", "1");
         dut.set("b", "2");
         Cursor c = conn.cursor();
-        c.jumpBack();
+        assertThat(c.jumpBack(), is(true));
         assertThat((String) c.getKey(), is("b"));
         c.close();
     }
 
-    @Test(expected=KyotoTycoonException.class) public void
+    @Test public void
     cursor_can_not_jump_back_to_a_non_existing_record() {
         Cursor c = conn.cursor();
-        c.jumpBack();
+        assertThat(c.jumpBack(), is(false));
         c.close();
-    }
-
-    @Test(expected=KyotoTycoonException.class) public void
-    invalidated_cursor_can_not_jump_back() {
-        dut.set("a", "1");
-        dut.set("b", "2");
-        Cursor c = conn.cursor();
-        c.close();
-        c.jumpBack();
     }
 
     @Test public void
@@ -359,11 +341,13 @@ public class KyotoTycoonIntegrationTest {
         dut.set("b", "2");
         Cursor c = conn.cursor();
         c.jump();
-        c.setValue("3");
+        assertThat(c.setValue("3"), is(true));
+        assertThat((String) c.getValue(), is("3"));
         assertThat((String) c.getKey(), is("a"));
-        c.setValue("4", ExpirationTime.NONE, true);
+        assertThat(c.setValue("4", ExpirationTime.NONE, true), is(true));
         assertThat((String) c.getKey(), is("b"));
-        c.setValue("5", ExpirationTime.NONE, true);
+        assertThat(c.setValue("5", ExpirationTime.NONE, true), is(true));
+        assertThat(c.setValue("6"), is(false));
         c.close();
     }
 
