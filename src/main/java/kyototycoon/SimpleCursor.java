@@ -29,6 +29,7 @@ class SimpleCursor implements Cursor {
 
     public boolean jump(Object key) {
         Values input = new Values();
+        connection.setSignalParameters(input);
         connection.setDbParameter(input);
         setCursorParameter(input);
         if (key != null) {
@@ -49,6 +50,7 @@ class SimpleCursor implements Cursor {
     public boolean jumpBack(Object key) {
         Values input = new Values();
         connection.setDbParameter(input);
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         if (key != null) {
             connection.setKeyParameter(input, key);
@@ -63,6 +65,7 @@ class SimpleCursor implements Cursor {
 
     public boolean step() {
         Values input = new Values();
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_step", input));
         if (response.status == 450) {
@@ -74,6 +77,7 @@ class SimpleCursor implements Cursor {
 
     public boolean stepBack() {
         Values input = new Values();
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_step_back", input));
         if (response.status == 450) {
@@ -89,6 +93,7 @@ class SimpleCursor implements Cursor {
 
     public boolean setValue(Object value, ExpirationTime xt, boolean step) {
         Values input = new Values();
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         input.put(SimpleKyotoTycoonRpc.Names.VALUE, connection.valueTranscoder.encode(value));
         connection.setExpirationTimeParameter(input, xt);
@@ -103,6 +108,7 @@ class SimpleCursor implements Cursor {
 
     public boolean remove() {
         Values input = new Values();
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_remove", input));
         if (response.status == 450) {
@@ -118,6 +124,7 @@ class SimpleCursor implements Cursor {
 
     public Object getKey(boolean step) {
         Values input = new Values();
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         setStepParameter(input, step);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_get_key", input));
@@ -135,6 +142,7 @@ class SimpleCursor implements Cursor {
 
     public Object getValue(boolean step) {
         Values input = new Values();
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         setStepParameter(input, step);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_get_value", input));
@@ -151,6 +159,7 @@ class SimpleCursor implements Cursor {
 
     public Record get(boolean step) {
         Values input = new Values();
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         setStepParameter(input, step);
         final TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_get", input));
@@ -164,6 +173,7 @@ class SimpleCursor implements Cursor {
 
     public Record seize() {
         Values input = new Values();
+        connection.setSignalParameters(input);
         setCursorParameter(input);
         final TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_seize", input));
         if (response.status == 450) {
