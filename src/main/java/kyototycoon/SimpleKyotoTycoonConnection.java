@@ -34,4 +34,20 @@ public class SimpleKyotoTycoonConnection extends SimpleKyotoTycoonRpc implements
     public Cursor cursor() {
         return new SimpleCursor(this, ++cursorCount);
     }
+
+    public void setSignalWaiting(String name) {
+        setSignalWaiting(name, 0);
+    }
+
+    public void setSignalWaiting(String name, double timeout) {
+        signalWait.set(name, timeout);
+    }
+
+    public void setSignalSending(String name) {
+        setSignalSending(name, false);
+    }
+
+    public void setSignalSending(String name, boolean broadcast) {
+        signalSend.set(name, broadcast);
+    }
 }

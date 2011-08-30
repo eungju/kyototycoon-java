@@ -3,13 +3,10 @@ package kyototycoon;
 public interface KyotoTycoonConnection extends KyotoTycoonRpc {
     void close();
 
-    // Common arguments
-    //CUR
-    //WAIT
-    //WAITTIME
-    //SIGNAL
-    //SIGNALBROAD
-    
-    // Cursor operations
     Cursor cursor();
+
+    void setSignalWaiting(String name);
+    void setSignalWaiting(String name, double timeout);
+    void setSignalSending(String name);
+    void setSignalSending(String name, boolean broadcast);
 }

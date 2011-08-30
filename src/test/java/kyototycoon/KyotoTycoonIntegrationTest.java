@@ -370,9 +370,9 @@ public class KyotoTycoonIntegrationTest {
         dut.set("b", "2");
         Cursor c = conn.cursor();
         c.jump();
-        assertThat((String)c.getKey(), is("a"));
-        assertThat((String)c.getKey(true), is("a"));
-        assertThat((String)c.getKey(true), is("b"));
+        assertThat((String) c.getKey(), is("a"));
+        assertThat((String) c.getKey(true), is("a"));
+        assertThat((String) c.getKey(true), is("b"));
         assertThat(c.getKey(true), nullValue());
         c.close();
     }
@@ -383,7 +383,7 @@ public class KyotoTycoonIntegrationTest {
         dut.set("b", "2");
         Cursor c = conn.cursor();
         c.jump();
-        assertThat((String)c.getValue(), is("1"));
+        assertThat((String) c.getValue(), is("1"));
         assertThat((String)c.getValue(true), is("1"));
         assertThat((String)c.getValue(true), is("2"));
         assertThat(c.getValue(true), nullValue());
@@ -415,5 +415,32 @@ public class KyotoTycoonIntegrationTest {
         assertThat(dut.get("a"), nullValue());
         assertThat(c.seize(), nullValue());
         c.close();
+    }
+
+    @Test public void
+    waiting_and_signaling_on_conditional_variables() throws InterruptedException {
+        Thread waitingThread = new Thread(new Runnable() {
+            public void run() {
+                KyotoTycoonConnection conn = dut.getConnection();
+                try {
+                    conn.setSignalWaiting("ping");
+                    assertThat((String) conn.get("key"), is("value"));
+                } finally {
+                    conn.close();
+                }
+            }
+        });
+        waitingThread.start();
+        Thread.sleep(100);
+        
+        KyotoTycoonConnection conn = dut.getConnection();
+        try {
+            conn.setSignalSending("ping");
+            conn.set("key", "value");
+        } finally {
+            conn.close();
+        }
+
+        waitingThread.join();
     }
 }

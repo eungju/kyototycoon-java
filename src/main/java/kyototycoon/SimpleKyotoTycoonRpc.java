@@ -32,11 +32,17 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         byte[] ERROR = "ERROR".getBytes();
         byte[] DB = "DB".getBytes();
         byte[] CUR = "CUR".getBytes();
+        byte[] WAIT = "WAIT".getBytes();
+        byte[] WAITTIME = "WAITTIME".getBytes();
+        byte[] SIGNAL = "SIGNAL".getBytes();
+        byte[] SIGNALBROAD = "SIGNALBROAD".getBytes();
     }
 
     protected Transcoder keyTranscoder = StringTranscoder.INSTANCE;
     protected Transcoder valueTranscoder = StringTranscoder.INSTANCE;
     protected String target = null;
+    protected final SignalWait signalWait = new SignalWait();
+    protected final SignalSend signalSend = new SignalSend();
     protected TsvRpc tsvRpc;
 
     public void setKeyTranscoder(Transcoder transcoder) {
@@ -391,6 +397,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     Values createInputWithTarget() {
         Values input = new Values();
         setDbParameter(input);
+        setSignalParameters(input);
         return input;
     }
 
@@ -411,6 +418,23 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     void setExpirationTimeParameter(Values input, ExpirationTime xt) {
         if (xt.isEnabled()) {
             input.put(Names.XT, encodeStr(String.valueOf(xt.getValue())));
+        }
+    }
+
+    void setSignalParameters(Values input) {
+        if (signalWait.enabled) {
+            input.put(Names.WAIT, encodeStr(signalWait.name));
+            if (signalWait.timeout > 0) {
+                input.put(Names.WAITTIME, encodeStr(String.format("%.6f", signalWait.timeout)));
+            }
+            signalWait.clear();
+        }
+        if (signalSend.enabled) {
+            input.put(Names.SIGNAL, encodeStr(signalSend.name));
+            if (signalSend.broadcast) {
+                input.put(Names.SIGNALBROAD, new byte[0]);
+            }
+            signalSend.clear();
         }
     }
 
@@ -439,5 +463,49 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
             return ExpirationTime.NONE;
         }
         return ExpirationTime.at(Long.parseLong(decodeStr(bytes)));
+    }
+
+    static class SignalWait {
+        public boolean enabled;
+        public String name;
+        public double timeout;
+
+        public SignalWait() {
+            clear();
+        }
+
+        public void set(String name, double timeout) {
+            this.enabled = true;
+            this.name = name;
+            this.timeout = timeout;
+        }
+
+        public void clear() {
+            enabled = false;
+            name = null;
+            timeout = 0;
+        }
+    }
+
+    static class SignalSend {
+        public boolean enabled;
+        public String name;
+        public boolean broadcast;
+
+        public SignalSend() {
+            clear();
+        }
+
+        public void set(String name, boolean broadcast) {
+            this.enabled = true;
+            this.name = name;
+            this.broadcast = broadcast;
+        }
+
+        public void clear() {
+            enabled = false;
+            name = null;
+            broadcast = false;
+        }
     }
 }
