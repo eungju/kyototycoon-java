@@ -3,6 +3,7 @@ package kyototycoon;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -40,6 +41,19 @@ public class KyotoTycoonIntegrationTest {
         Map<String, String> actual = dut.report();
         System.out.println(actual);
         assertThat(actual, Matchers.<Object>notNullValue());
+    }
+
+    @Ignore
+    @Test public void
+    play_script_calls_a_procedure_of_the_scripting_extension() {
+        Map<Object, Object> records = new HashMap<Object, Object>();
+        List<Object> result = dut.playScript("name", records);
+    }
+
+    @Ignore
+    @Test public void
+    tune_replication_set_the_replication_configuration() {
+        dut.tuneReplication();
     }
 
     @Test public void

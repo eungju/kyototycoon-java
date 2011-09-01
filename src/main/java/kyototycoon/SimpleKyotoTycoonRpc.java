@@ -65,6 +65,57 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         return result;
     }
 
+    public List<Object> playScript(String name, Map<Object, Object> entries) {
+        Values input = new Values();
+        setSignalParameters(input);
+        input.put("name".getBytes(), encodeStr(name));
+        for (Map.Entry<Object, Object> entry : entries.entrySet()) {
+            byte[] key = keyTranscoder.encode(entry.getKey());
+            byte[] value = valueTranscoder.encode(entry.getValue());
+            byte[] markedKey = new byte[key.length + 1];
+            markedKey[0] = '_';
+            System.arraycopy(key, 0, markedKey, 1, key.length);
+            input.put(markedKey, value);
+        }
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("play_script", input));
+        checkError(response);
+        List<Object> result = new ArrayList<Object>();
+        for (KeyValuePair pair : response.output) {
+            if (pair.key[0] == '_') {
+                byte[] bareKey = new byte[pair.key.length - 1];
+                System.arraycopy(pair.key, 1, bareKey, 0, bareKey.length);
+                Object key = keyTranscoder.decode(bareKey);
+                result.add(key);
+            }
+        }
+        return result;
+    }
+    
+    public void tuneReplication() {
+        tuneReplication(null, 1978, Long.MAX_VALUE, -1);
+    }
+
+    public void tuneReplication(String host, int port, long ts, double iv) {
+        Values input = new Values();
+        setSignalParameters(input);
+        if (host != null && !host.isEmpty()) {
+            input.put("host".getBytes(), encodeStr(host));
+        }
+        if (port != 1978) {
+            input.put("port".getBytes(), encodeStr(String.format("%d", ts)));
+        }
+        if (ts == Long.MAX_VALUE - 1) {
+            input.put("ts".getBytes(), encodeStr("now"));
+        } else if (ts != Long.MAX_VALUE) {
+            input.put("ts".getBytes(), encodeStr(String.format("%d", ts)));
+        }
+        if (iv >= 0) {
+            input.put("iv".getBytes(), encodeStr(String.format("%.6f", ts)));
+        }
+        TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("tune_replication", input));
+        checkError(response);
+    }
+
     public Map<String,String> status() {
         Values input = new Values();
         setSignalParameters(input);
