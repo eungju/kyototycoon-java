@@ -13,7 +13,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class NettyTsvRpcClient implements TsvRpcClient {
-    private ClientBootstrap bootstrap;
+    private final ClientBootstrap bootstrap;
     private URI address;
     private NettyTsvRpcConnection connection;
 
