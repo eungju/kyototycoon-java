@@ -53,19 +53,7 @@
             <artifactId>finagle-http</artifactId>
             <version>1.9.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.twitter</groupId>
-            <artifactId>finagle-example</artifactId>
-            <version>1.9.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.1.2</version>
-            <optional>true</optional>
-        </dependency>
-        
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
