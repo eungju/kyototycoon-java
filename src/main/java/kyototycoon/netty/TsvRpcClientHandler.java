@@ -15,7 +15,7 @@ public class TsvRpcClientHandler extends SimpleChannelHandler {
     @Override
     public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
         TsvRpcCall call = (TsvRpcCall) e.getMessage();
-        waiting.offer(call);
+        waiting.add(call);
         Channels.write(ctx, e.getFuture(), call.request);
     }
 

@@ -102,7 +102,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
             input.put("host".getBytes(), encodeStr(host));
         }
         if (port != 1978) {
-            input.put("port".getBytes(), encodeStr(String.format("%d", ts)));
+            input.put("port".getBytes(), encodeStr(String.format("%d", port)));
         }
         if (ts == Long.MAX_VALUE - 1) {
             input.put("ts".getBytes(), encodeStr("now"));
@@ -110,7 +110,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
             input.put("ts".getBytes(), encodeStr(String.format("%d", ts)));
         }
         if (iv >= 0) {
-            input.put("iv".getBytes(), encodeStr(String.format("%.6f", ts)));
+            input.put("iv".getBytes(), encodeStr(String.format("%.6f", iv)));
         }
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("tune_replication", input));
         checkError(response);

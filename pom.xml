@@ -177,13 +177,6 @@
 
     <repositories>
         <repository>
-            <id>repository.jboss.org</id>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <id>twittercom</id>
             <name>twitter.com</name>
             <url>http://maven.twttr.com/</url>
