@@ -11,7 +11,6 @@ import kyototycoon.tsvrpc.TsvRpcResponse;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpClientCodec;
 
 public class FinagleTsvRpcCodec implements Codec<TsvRpcRequest, TsvRpcResponse> {
@@ -29,8 +28,7 @@ public class FinagleTsvRpcCodec implements Codec<TsvRpcRequest, TsvRpcResponse> 
         return new ChannelPipelineFactory() {
             public ChannelPipeline getPipeline() throws Exception {
                 ChannelPipeline pipeline = Channels.pipeline();
-                pipeline.addLast("http", new HttpClientCodec());
-                pipeline.addLast("http-aggregator", new HttpChunkAggregator(MAX_CONTENT_LENGTH));
+                pipeline.addLast("http", new HttpClientCodec(4096, 8192, Integer.MAX_VALUE));
                 pipeline.addLast("tsvrpc", new TsvRpcClientCodec());
                 return pipeline;
             }
