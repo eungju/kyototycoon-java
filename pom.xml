@@ -4,7 +4,7 @@
     <groupId>kyototycoon</groupId>
     <artifactId>kyototycoon</artifactId>
     <packaging>jar</packaging>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
 
     <name>Kyoto Tycoon Java Client</name>
     <description>
