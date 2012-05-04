@@ -1,11 +1,13 @@
 package kyototycoon;
 
+import com.google.common.base.Strings;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -258,6 +260,18 @@ public class KyotoTycoonIntegrationTest {
         Map<Object, Object> expected = new HashMap<Object, Object>();
         expected.put("a", "1");
         assertThat(dut.getBulk(keys), is(expected));
+    }
+
+    @Test public void
+    get_bulk_retrieves_very_large_number_of_records_at_once() {
+        List<Object> keys = new ArrayList<Object>();
+        String value = Strings.repeat("0", 1024);
+        for (int i = 0; i < 1024; i++) {
+            Object key = String.valueOf(i);
+            keys.add(key);
+            dut.set(key, value);
+        }
+        assertThat(dut.getBulk(keys).size(), is(keys.size()));
     }
 
     @Test public void

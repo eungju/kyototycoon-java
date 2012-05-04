@@ -15,7 +15,7 @@ import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpClientCodec;
 
 public class FinagleTsvRpcCodec implements Codec<TsvRpcRequest, TsvRpcResponse> {
-    private static final int MAX_CONTENT_LENGTH = 1024 * 1024;
+    private static final int MAX_CONTENT_LENGTH = Integer.MAX_VALUE;
 
     public Future<Service<TsvRpcRequest, TsvRpcResponse>> prepareService(Service<TsvRpcRequest, TsvRpcResponse> underlying) {
         return Codec$class.prepareService(this, underlying);
