@@ -13,9 +13,9 @@
     <url>http://code.google.com/p/kyototycoon-java</url>
 
     <scm>
-        <connection>scm:hg:http://bitbucket.org/EP/kyototycoon-java/</connection>
-        <developerConnection>scm:hg:https://bitbucket.org/EP/kyototycoon-java/</developerConnection>
-        <url>http://www.bitbucket.org/EP/kyototycoon-java/</url>
+      <connection>scm:hg:https://bitbucket.org/EP/kyototycoon-java</connection>
+      <developerConnection>scm:hg:ssh://hg@bitbucket.org/EP/kyototycoon-java</developerConnection>
+      <url>https://bitbucket.org/EP/kyototycoon-java</url>
     </scm>
 
     <issueManagement>
