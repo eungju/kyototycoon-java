@@ -326,7 +326,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         setDbParameter(input);
         setExpirationTimeParameter(input, xt);
         if (atomic) {
-            input.put(Names.ATOMIC, new byte[0]);
+            input.put(Names.ATOMIC);
         }
         for (Map.Entry<Object, Object> entry : entries.entrySet()) {
             byte[] key = keyTranscoder.encode(entry.getKey());
@@ -350,14 +350,14 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         setSignalParameters(input);
         setDbParameter(input);
         if (atomic) {
-            input.put(Names.ATOMIC, new byte[0]);
+            input.put(Names.ATOMIC);
         }
         for (Object key : keys) {
             byte[] bareKey = keyTranscoder.encode(key);
             byte[] markedKey = new byte[bareKey.length + 1];
             markedKey[0] = '_';
             System.arraycopy(bareKey, 0, markedKey, 1, bareKey.length);
-            input.put(markedKey, new byte[0]);
+            input.put(markedKey);
         }
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("remove_bulk", input));
         checkError(response);
@@ -373,14 +373,14 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         setSignalParameters(input);
         setDbParameter(input);
         if (atomic) {
-            input.put(Names.ATOMIC, new byte[0]);
+            input.put(Names.ATOMIC);
         }
         for (Object key : keys) {
             byte[] bareKey = keyTranscoder.encode(key);
             byte[] markedKey = new byte[bareKey.length + 1];
             markedKey[0] = '_';
             System.arraycopy(bareKey, 0, markedKey, 1, bareKey.length);
-            input.put(markedKey, new byte[0]);
+            input.put(markedKey);
         }
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("get_bulk", input));
         checkError(response);
@@ -518,7 +518,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         if (signalSend.enabled) {
             input.put(Names.SIGNAL, encodeStr(signalSend.name));
             if (signalSend.broadcast) {
-                input.put(Names.SIGNALBROAD, new byte[0]);
+                input.put(Names.SIGNALBROAD);
             }
             signalSend.clear();
         }

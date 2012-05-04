@@ -6,7 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Values implements Iterable<KeyValuePair> {
-    private final List<KeyValuePair> entries = new ArrayList<KeyValuePair>(4);
+    private final List<KeyValuePair> entries = new ArrayList<KeyValuePair>();
+
+    private static final byte[] NONE = new byte[0];
+    public Values put(byte[] key) {
+        return put(key, NONE);
+    }
 
     public Values put(byte[] key, byte[] value) {
         entries.add(new KeyValuePair(key, value));
