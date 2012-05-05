@@ -31,7 +31,7 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
 
     public void start() {
         serviceFactory = buildServiceFactory();
-        service = serviceFactory.service();
+        service = serviceFactory.toService();
     }
 
     ServiceFactory<TsvRpcRequest, TsvRpcResponse> buildServiceFactory() {
@@ -62,7 +62,7 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     }
 
     public TsvRpcConnection getConnection() {
-        return new FinagleTsvRpcConnection(serviceFactory.make().apply());
+        return new FinagleTsvRpcConnection(serviceFactory.apply().apply());
     }
 
     public List<URI> getComponents(URI uri) {

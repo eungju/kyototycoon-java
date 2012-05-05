@@ -2,9 +2,7 @@ package kyototycoon.finagle;
 
 import com.twitter.finagle.Codec;
 import com.twitter.finagle.Codec$class;
-import com.twitter.finagle.Service;
 import com.twitter.finagle.ServiceFactory;
-import com.twitter.util.Future;
 import kyototycoon.netty.TsvRpcClientCodec;
 import kyototycoon.tsvrpc.TsvRpcRequest;
 import kyototycoon.tsvrpc.TsvRpcResponse;
@@ -14,16 +12,6 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpClientCodec;
 
 public class FinagleTsvRpcCodec implements Codec<TsvRpcRequest, TsvRpcResponse> {
-    private static final int MAX_CONTENT_LENGTH = Integer.MAX_VALUE;
-
-    public Future<Service<TsvRpcRequest, TsvRpcResponse>> prepareService(Service<TsvRpcRequest, TsvRpcResponse> underlying) {
-        return Codec$class.prepareService(this, underlying);
-    }
-
-    public ServiceFactory<TsvRpcRequest, TsvRpcResponse> prepareFactory(ServiceFactory<TsvRpcRequest, TsvRpcResponse> underlying) {
-        return Codec$class.prepareFactory(this, underlying);
-    }
-
     public ChannelPipelineFactory pipelineFactory() {
         return new ChannelPipelineFactory() {
             public ChannelPipeline getPipeline() throws Exception {
@@ -33,5 +21,21 @@ public class FinagleTsvRpcCodec implements Codec<TsvRpcRequest, TsvRpcResponse> 
                 return pipeline;
             }
         };
+    }
+
+    public ServiceFactory<TsvRpcRequest, TsvRpcResponse>prepareServiceFactory(ServiceFactory<TsvRpcRequest, TsvRpcResponse> underlying) {
+        return Codec$class.prepareServiceFactory(this, underlying);
+    }
+
+    public ServiceFactory<TsvRpcRequest, TsvRpcResponse> prepareConnFactory(ServiceFactory<TsvRpcRequest, TsvRpcResponse> underlying) {
+        return Codec$class.prepareConnFactory(this, underlying);
+    }
+
+    public ServiceFactory<TsvRpcRequest, TsvRpcResponse> rawPrepareClientConnFactory(ServiceFactory<Object, Object> underlying) {
+        return Codec$class.rawPrepareClientConnFactory(this, underlying);
+    }
+
+    public  ServiceFactory<Object, Object> rawPrepareServerConnFactory(ServiceFactory<TsvRpcRequest, TsvRpcResponse> underlying) {
+        return Codec$class.rawPrepareServerConnFactory(this, underlying);
     }
 }
