@@ -49,8 +49,4 @@ public class NettyTsvRpcClient implements TsvRpcClient {
     public TsvRpcResponse call(TsvRpcRequest request) {
         return connection.call(request);
     }
-
-    public Future<TsvRpcResponse> callAsync(TsvRpcRequest request) {
-        return connection.callAsync(request);
-    }
 }
