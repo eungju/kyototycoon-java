@@ -2,11 +2,15 @@ package kyototycoon.finagle;
 
 import com.twitter.finagle.ServiceFactory;
 import com.twitter.finagle.builder.ClientBuilder;
+import com.twitter.finagle.http.Http;
 import com.twitter.util.Duration;
+import com.twitter.util.StorageUnit;
 import kyototycoon.tsvrpc.TsvRpcClient;
 import kyototycoon.tsvrpc.TsvRpcConnection;
 import kyototycoon.tsvrpc.TsvRpcRequest;
 import kyototycoon.tsvrpc.TsvRpcResponse;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 import scala.collection.JavaConversions;
 
 import java.net.InetSocketAddress;
@@ -19,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
     private URI address;
 	private Duration requestTimeout = null;
-    private ServiceFactory<TsvRpcRequest, TsvRpcResponse> serviceFactory;
+    private ServiceFactory<HttpRequest, HttpResponse> serviceFactory;
 
     public void setHost(URI address) {
         this.address = address;
@@ -34,9 +38,9 @@ public class FinagleTsvRpcClient extends FinagleTsvRpc implements TsvRpcClient {
         service = serviceFactory.toService();
     }
 
-    ServiceFactory<TsvRpcRequest, TsvRpcResponse> buildServiceFactory() {
+    ServiceFactory<HttpRequest, HttpResponse> buildServiceFactory() {
         ClientBuilder builder = ClientBuilder.get()
-                .codec(new FinagleTsvRpcCodec())
+                .codec(Http.get().maxRequestSize(new StorageUnit(1024 * 1024 * 1024)).maxResponseSize(new StorageUnit(1024 * 1024 * 1024)))
                 .hostConnectionLimit(100);
         if (requestTimeout != null) {
             builder = builder.requestTimeout(requestTimeout);

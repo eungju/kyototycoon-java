@@ -22,9 +22,11 @@ public class TsvRpcRequestEncoder extends OneToOneEncoder {
             return msg;
         }
         TsvRpcRequest request = (TsvRpcRequest) msg;
+        return encode(request);
+    }
+
+    public static HttpRequest encode(TsvRpcRequest request) {
         HttpRequest httpRequest = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "/rpc/" + request.procedure);
-        InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
-        httpRequest.setHeader(HttpHeaders.Names.HOST, remoteAddress.getHostName() + ":" + remoteAddress.getPort());
         httpRequest.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         TsvEncoding tsvEncoding = TsvEncodingHelper.forEfficiency(request.input);
         ChannelBuffer content = tsvEncoding.encode(request.input);

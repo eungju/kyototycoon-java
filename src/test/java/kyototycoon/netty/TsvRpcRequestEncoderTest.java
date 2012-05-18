@@ -48,7 +48,6 @@ public class TsvRpcRequestEncoderTest {
         assertThat(actual.getMethod(), is(HttpMethod.POST));
         assertThat(actual.getUri(), is("/rpc/echo"));
         assertThat(actual.getProtocolVersion(), is(HttpVersion.HTTP_1_1));
-        assertThat(actual.getHeader(HttpHeaders.Names.HOST), is("localhost:1978"));
         assertThat(actual.getHeader(HttpHeaders.Names.CONNECTION), is(HttpHeaders.Values.KEEP_ALIVE));
         TsvEncoding tsvEncoding = TsvEncodingHelper.forEfficiency(request.input);
         ChannelBuffer content = ChannelBuffers.wrappedBuffer(tsvEncoding.encode(request.input));
