@@ -9,7 +9,6 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import java.net.URI;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class NettyTsvRpcClient implements TsvRpcClient {

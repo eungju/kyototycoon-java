@@ -7,8 +7,6 @@ import com.twitter.util.Duration;
 import com.twitter.util.StorageUnit;
 import kyototycoon.tsvrpc.TsvRpcClient;
 import kyototycoon.tsvrpc.TsvRpcConnection;
-import kyototycoon.tsvrpc.TsvRpcRequest;
-import kyototycoon.tsvrpc.TsvRpcResponse;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import scala.collection.JavaConversions;
