@@ -46,12 +46,12 @@
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>finagle-core</artifactId>
-            <version>5.0.0</version>
+            <version>5.3.22</version>
         </dependency>
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>finagle-http</artifactId>
-            <version>5.0.0</version>
+            <version>5.3.22</version>
         </dependency>
 
         <dependency>
@@ -179,7 +179,7 @@
         <repository>
             <id>twittercom</id>
             <name>twitter.com</name>
-            <url>http://maven.twttr.com/</url>
+            <url>http://maven.twttr.com</url>
         </repository>
     </repositories>
 
