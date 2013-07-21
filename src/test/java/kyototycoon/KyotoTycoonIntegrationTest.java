@@ -42,7 +42,7 @@ public class KyotoTycoonIntegrationTest {
     report_returns_the_report_of_the_server_information() {
         Map<String, String> actual = dut.report();
         System.out.println(actual);
-        assertThat(actual, Matchers.<Object>notNullValue());
+        assertThat(actual, Matchers.notNullValue());
     }
 
     @Ignore
@@ -62,7 +62,7 @@ public class KyotoTycoonIntegrationTest {
     status_returns_the_miscellaneous_status_information_of_a_database() {
         Map<String, String> actual = dut.status();
         System.out.println(actual);
-        assertThat(actual, Matchers.<Object>notNullValue());
+        assertThat(actual, Matchers.notNullValue());
     }
 
     @Test public void

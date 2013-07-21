@@ -13,21 +13,19 @@ import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JMock;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.net.InetSocketAddress;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-@RunWith(JMock.class)
 public class TsvRpcRequestEncoderTest {
-    private Mockery mockery = new JUnit4Mockery();
+    @Rule
+    public final JUnitRuleMockery mockery = new JUnitRuleMockery();
     TsvRpcRequestEncoder dut;
     ChannelHandlerContext ctx;
     Channel channel;

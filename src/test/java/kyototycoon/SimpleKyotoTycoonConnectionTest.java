@@ -2,13 +2,14 @@ package kyototycoon;
 
 import kyototycoon.tsvrpc.TsvRpcConnection;
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class SimpleKyotoTycoonConnectionTest {
-    Mockery mockery = new JUnit4Mockery();
+    @Rule
+    public final JUnitRuleMockery mockery = new JUnitRuleMockery();
     SimpleKyotoTycoonConnection dut;
     TsvRpcConnection underlying;
 

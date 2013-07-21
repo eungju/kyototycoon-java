@@ -2,8 +2,7 @@ package kyototycoon.tsvrpc;
 
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class TsvEncodingHelperTest {
     @Test(expected=IllegalArgumentException.class)
@@ -13,21 +12,21 @@ public class TsvEncodingHelperTest {
 
     @Test
     public void detectRawEncoding() {
-        assertThat(TsvEncodingHelper.forContentType("text/tab-separated-values").valueEncoding, is(RawValueEncoding.class));
+        assertSame(RawValueEncoding.class, TsvEncodingHelper.forContentType("text/tab-separated-values").valueEncoding.getClass());
     }
 
     @Test
     public void detectUrlEncoding() {
-        assertThat(TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=U").valueEncoding, is(UrlValueEncoding.class));
+        assertSame(UrlValueEncoding.class, TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=U").valueEncoding.getClass());
     }
 
     @Test
     public void detectBase64Encoding() {
-        assertThat(TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=B").valueEncoding, is(Base64ValueEncoding.class));
+        assertSame(Base64ValueEncoding.class, TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=B").valueEncoding.getClass());
     }
 
     @Test
     public void detectQuotedPrintableEncoding() {
-        assertThat(TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=Q").valueEncoding, is(QuotedPrintableValueEncoding.class));
+        assertSame(QuotedPrintableValueEncoding.class, TsvEncodingHelper.forContentType("text/tab-separated-values; colenc=Q").valueEncoding.getClass());
     }
 }
