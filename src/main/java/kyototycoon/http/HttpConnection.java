@@ -69,26 +69,26 @@ public class HttpConnection {
                 ChannelBuffer body = null;
                 if (headers.hasContentLength()) {
                     if (recvBuffer.readableBytes() < headers.getContentLength()) {
-                        throw new BufferUnderflowException();
+                        throw new UnderflowDecoderException();
                     }
                     body = ChannelBuffers.buffer(headers.getContentLength());
                     recvBuffer.readBytes(body);
                 }
                 return new HttpResponse(statusLine, headers, body);
-            } catch (BufferUnderflowException e) {
+            } catch (UnderflowDecoderException e) {
                 recvBuffer.resetReaderIndex();
             }
         }
     }
 
-    StatusLine parseStatusLine(ChannelBuffer buffer) throws BufferUnderflowException {
+    StatusLine parseStatusLine(ChannelBuffer buffer) throws UnderflowDecoderException {
         String version = readAsStringUntil(buffer, SPACE);
         String code = readAsStringUntil(buffer, SPACE);
         String reason = readAsStringUntil(buffer, CRLF);
         return new StatusLine(version, Integer.parseInt(code), reason);
     }
 
-    Headers parseHeaders(ChannelBuffer buffer) throws BufferUnderflowException {
+    Headers parseHeaders(ChannelBuffer buffer) throws UnderflowDecoderException {
         Headers headers = new Headers();
         while (true) {
             int n = buffer.bytesBefore(new BytesChannelBufferIndexFinder(CRLF));
@@ -103,10 +103,10 @@ public class HttpConnection {
         }
     }
 
-    String readAsStringUntil(ChannelBuffer buffer, byte value) throws BufferUnderflowException {
+    String readAsStringUntil(ChannelBuffer buffer, byte value) throws UnderflowDecoderException {
         int n = buffer.bytesBefore(value);
         if (n == -1) {
-            throw new BufferUnderflowException();
+            throw new UnderflowDecoderException();
         }
         ChannelBuffer d = buffer.readSlice(n);
         buffer.skipBytes(1);
@@ -134,10 +134,10 @@ public class HttpConnection {
         }
     }
 
-    String readAsStringUntil(ChannelBuffer buffer, byte[] value) throws BufferUnderflowException {
+    String readAsStringUntil(ChannelBuffer buffer, byte[] value) throws UnderflowDecoderException {
         int n = buffer.bytesBefore(new BytesChannelBufferIndexFinder(value));
         if (n == -1) {
-            throw new BufferUnderflowException();
+            throw new UnderflowDecoderException();
         }
         ChannelBuffer d = buffer.readSlice(n);
         buffer.skipBytes(value.length);

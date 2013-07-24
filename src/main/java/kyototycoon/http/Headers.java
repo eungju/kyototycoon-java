@@ -11,8 +11,12 @@ public class Headers implements Iterable<Header> {
         headers = new ArrayList<Header>();
     }
 
+    public void addHeader(Header header) {
+        headers.add(header);
+    }
+
     public void addHeader(String name, String value) {
-        headers.add(new Header(name, value));
+        addHeader(new Header(name, value));
     }
 
     public Iterator<Header> iterator() {
@@ -30,6 +34,10 @@ public class Headers implements Iterable<Header> {
             }
         }
         return null;
+    }
+
+    public int size() {
+        return headers.size();
     }
 
     public boolean hasContentLength() {
