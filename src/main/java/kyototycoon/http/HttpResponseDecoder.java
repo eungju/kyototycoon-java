@@ -2,7 +2,10 @@ package kyototycoon.http;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferIndexFinder;
+import org.jboss.netty.buffer.ChannelBuffers;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 
 public class HttpResponseDecoder {
@@ -14,6 +17,20 @@ public class HttpResponseDecoder {
 
     public HttpResponseDecoder(ChannelBuffer buffer) {
         this.buffer = buffer;
+    }
+
+    public void fill(InputStream input) throws IOException {
+        byte[] b = new byte[4 * 1024];
+        int n = input.read(b);
+        fill(b, 0, n);
+    }
+
+    public void fill(byte[] input) {
+        fill(input, 0, input.length);
+    }
+
+    public void fill(byte[] input, int index, int length) {
+        buffer.writeBytes(input, index, length);
     }
 
     public StatusLine statusLine() throws UnderflowDecoderException {
@@ -40,6 +57,26 @@ public class HttpResponseDecoder {
             }
             Header header = header();
             headers.addHeader(header);
+        }
+    }
+
+    public HttpResponse decode() {
+        buffer.markReaderIndex();
+        try {
+            StatusLine statusLine = statusLine();
+            Headers headers = headers();
+            ChannelBuffer body = null;
+            if (headers.hasContentLength()) {
+                if (buffer.readableBytes() < headers.getContentLength()) {
+                    throw new UnderflowDecoderException();
+                }
+                body = ChannelBuffers.buffer(headers.getContentLength());
+                buffer.readBytes(body);
+            }
+            return new HttpResponse(statusLine, headers, body);
+        } catch (UnderflowDecoderException e) {
+            buffer.resetReaderIndex();
+            return null;
         }
     }
 
