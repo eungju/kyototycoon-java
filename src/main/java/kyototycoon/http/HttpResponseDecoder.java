@@ -11,12 +11,12 @@ import java.nio.charset.Charset;
 public class HttpResponseDecoder {
     private final ChannelBuffer buffer;
     private final Charset charset = Charset.defaultCharset();
-    private static final byte SP = ' ';
-    private static final byte COLON = ':';
+    private static final byte[] SP = " ".getBytes();
+    private static final byte[] COLON = ":".getBytes();
     private static final byte[] CRLF = "\r\n".getBytes();
 
-    public HttpResponseDecoder(ChannelBuffer buffer) {
-        this.buffer = buffer;
+    public HttpResponseDecoder() {
+        this.buffer = ChannelBuffers.dynamicBuffer();
     }
 
     public void fill(InputStream input) throws IOException {
@@ -31,33 +31,6 @@ public class HttpResponseDecoder {
 
     public void fill(byte[] input, int index, int length) {
         buffer.writeBytes(input, index, length);
-    }
-
-    public StatusLine statusLine() throws UnderflowDecoderException {
-        String version = readAsStringUntil(buffer, SP);
-        String code = readAsStringUntil(buffer, SP);
-        String reason = readAsStringUntil(buffer, CRLF);
-        return new StatusLine(version, Integer.parseInt(code), reason);
-    }
-
-    public Header header() throws UnderflowDecoderException {
-        String name = readAsStringUntil(buffer, COLON);
-        buffer.skipBytes(buffer.bytesBefore(ChannelBufferIndexFinder.NOT_LINEAR_WHITESPACE));
-        String value = readAsStringUntil(buffer, CRLF);
-        return new Header(name, value);
-    }
-
-    public Headers headers() throws UnderflowDecoderException {
-        Headers headers = new Headers();
-        while (true) {
-            int n = buffer.bytesBefore(new BytesChannelBufferIndexFinder(CRLF));
-            if (n == 0) {
-                buffer.skipBytes(CRLF.length);
-                return headers;
-            }
-            Header header = header();
-            headers.addHeader(header);
-        }
     }
 
     public HttpResponse decode() {
@@ -80,14 +53,58 @@ public class HttpResponseDecoder {
         }
     }
 
-    String readAsStringUntil(ChannelBuffer buffer, byte value) throws UnderflowDecoderException {
-        int n = buffer.bytesBefore(value);
+    StatusLine statusLine() throws UnderflowDecoderException {
+        String version = stringEndsWith(SP);
+        String code = stringEndsWith(SP);
+        String reason = stringEndsWith(CRLF);
+        return new StatusLine(version, Integer.parseInt(code), reason);
+    }
+
+    Headers headers() throws UnderflowDecoderException {
+        Headers headers = new Headers();
+        while (true) {
+            if (expect(CRLF)) {
+                return headers;
+            }
+            Header header = header();
+            headers.addHeader(header);
+        }
+    }
+
+    Header header() throws UnderflowDecoderException {
+        String name = stringEndsWith(COLON);
+        ignoreWhiteSpaces();
+        String value = stringEndsWith(CRLF);
+        return new Header(name, value);
+    }
+
+    String stringEndsWith(byte[] value) throws UnderflowDecoderException {
+        int n = buffer.bytesBefore(new BytesChannelBufferIndexFinder(value));
         if (n == -1) {
             throw new UnderflowDecoderException();
         }
         ChannelBuffer d = buffer.readSlice(n);
-        buffer.skipBytes(1);
+        buffer.skipBytes(value.length);
         return d.toString(charset);
+    }
+
+    void ignoreWhiteSpaces() throws UnderflowDecoderException {
+        int n = buffer.bytesBefore(ChannelBufferIndexFinder.NOT_LINEAR_WHITESPACE);
+        if (n == -1) {
+            throw new UnderflowDecoderException();
+        }
+        buffer.skipBytes(n);
+    }
+
+    boolean expect(byte[] value) throws UnderflowDecoderException {
+        int n = buffer.bytesBefore(new BytesChannelBufferIndexFinder(value));
+        if (n == -1) {
+            throw new UnderflowDecoderException();
+        } else if (n == 0) {
+            buffer.skipBytes(value.length);
+            return true;
+        }
+        return false;
     }
 
     static class BytesChannelBufferIndexFinder implements ChannelBufferIndexFinder {
@@ -109,15 +126,5 @@ public class HttpResponseDecoder {
             }
             return true;
         }
-    }
-
-    String readAsStringUntil(ChannelBuffer buffer, byte[] value) throws UnderflowDecoderException {
-        int n = buffer.bytesBefore(new BytesChannelBufferIndexFinder(value));
-        if (n == -1) {
-            throw new UnderflowDecoderException();
-        }
-        ChannelBuffer d = buffer.readSlice(n);
-        buffer.skipBytes(value.length);
-        return d.toString(charset);
     }
 }

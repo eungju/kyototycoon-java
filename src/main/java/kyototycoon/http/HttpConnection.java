@@ -55,8 +55,7 @@ public class HttpConnection {
         }
         sendBuffer.readBytes(send, sendBuffer.readableBytes());
         //receive
-        ChannelBuffer recvBuffer = ChannelBuffers.dynamicBuffer();
-        HttpResponseDecoder decoder = new HttpResponseDecoder(recvBuffer);
+        HttpResponseDecoder decoder = new HttpResponseDecoder();
         while (true) {
             decoder.fill(recv);
             HttpResponse response = decoder.decode();

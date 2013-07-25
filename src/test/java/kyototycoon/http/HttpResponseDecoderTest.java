@@ -13,7 +13,7 @@ public class HttpResponseDecoderTest {
 
     @Before
     public void beforeEach() {
-        dut = new HttpResponseDecoder(ChannelBuffers.dynamicBuffer());
+        dut = new HttpResponseDecoder();
     }
 
     @Test
