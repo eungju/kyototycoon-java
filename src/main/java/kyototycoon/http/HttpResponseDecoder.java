@@ -19,17 +19,17 @@ public class HttpResponseDecoder {
         this.buffer = ChannelBuffers.dynamicBuffer();
     }
 
-    public void fill(InputStream input) throws IOException {
+    public void readFrom(InputStream input) throws IOException {
         byte[] b = new byte[4 * 1024];
         int n = input.read(b);
-        fill(b, 0, n);
+        readFrom(b, 0, n);
     }
 
-    public void fill(byte[] input) {
-        fill(input, 0, input.length);
+    public void readFrom(byte[] input) {
+        readFrom(input, 0, input.length);
     }
 
-    public void fill(byte[] input, int index, int length) {
+    public void readFrom(byte[] input, int index, int length) {
         buffer.writeBytes(input, index, length);
     }
 

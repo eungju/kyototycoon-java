@@ -18,7 +18,7 @@ public class HttpResponseDecoderTest {
 
     @Test
     public void statusLineConsistsOfVersionAndCodeAndReason() throws Exception {
-        dut.fill("HTTP/1.1 200 OK\r\n".getBytes());
+        dut.readFrom("HTTP/1.1 200 OK\r\n".getBytes());
         StatusLine actual = dut.statusLine();
         assertThat(actual.version, is("HTTP/1.1"));
         assertThat(actual.code, is(200));
@@ -27,13 +27,13 @@ public class HttpResponseDecoderTest {
 
     @Test(expected=UnderflowDecoderException.class)
     public void statusLineRequiresMoreInput() throws Exception {
-        dut.fill("HTTP/1.1".getBytes());
+        dut.readFrom("HTTP/1.1".getBytes());
         dut.statusLine();
     }
 
     @Test
     public void headerConsistsOfNameAndValue() throws Exception {
-        dut.fill("Name:value\r\n".getBytes());
+        dut.readFrom("Name:value\r\n".getBytes());
         Header actual = dut.header();
         assertThat(actual.name, is("Name"));
         assertThat(actual.value, is("value"));
@@ -41,27 +41,27 @@ public class HttpResponseDecoderTest {
 
     @Test
     public void headerAllowsWhiteSpacesBeforeValue() throws Exception {
-        dut.fill("Name: \tvalue\r\n".getBytes());
+        dut.readFrom("Name: \tvalue\r\n".getBytes());
         Header actual = dut.header();
         assertThat(actual.name, is("Name"));
         assertThat(actual.value, is("value"));
     }
 
     @Test public void headersCanContainNoHeaders() throws Exception {
-        dut.fill("\r\n".getBytes());
+        dut.readFrom("\r\n".getBytes());
         Headers actual = dut.headers();
         assertThat(actual.size(), is(0));
     }
 
     @Test public void headersCanContainOnlyOneHeader() throws Exception {
-        dut.fill("Name:value\r\n\r\n".getBytes());
+        dut.readFrom("Name:value\r\n\r\n".getBytes());
         Headers actual = dut.headers();
         assertThat(actual.size(), is(1));
         assertThat(actual.getHeader("Name").value, is("value"));
     }
 
     @Test public void headersCanContainMultipleHeaders() throws Exception {
-        dut.fill("Content-Length:8\r\nContent-Type:text/html\r\n\r\n".getBytes());
+        dut.readFrom("Content-Length:8\r\nContent-Type:text/html\r\n\r\n".getBytes());
         Headers actual = dut.headers();
         assertThat(actual.size(), is(2));
         assertThat(actual.getHeader("Content-Length").value, is("8"));
@@ -69,13 +69,13 @@ public class HttpResponseDecoderTest {
     }
 
     @Test public void responseConsistsOfStatusLineAndHeadersAndBody() {
-        dut.fill("HTTP/1.1 200 OK\r\n".getBytes());
+        dut.readFrom("HTTP/1.1 200 OK\r\n".getBytes());
         assertThat(dut.decode(), nullValue());
-        dut.fill("Content-Length: 14\r\n\r\n".getBytes());
+        dut.readFrom("Content-Length: 14\r\n\r\n".getBytes());
         assertThat(dut.decode(), nullValue());
-        dut.fill("Hello".getBytes());
+        dut.readFrom("Hello".getBytes());
         assertThat(dut.decode(), nullValue());
-        dut.fill(", World\r\n".getBytes());
+        dut.readFrom(", World\r\n".getBytes());
         HttpResponse actual = dut.decode();
         assertThat(actual.statusLine.code, is(200));
         assertThat(actual.headers.getHeader("Content-Length").getValueAsInt(), is(14));

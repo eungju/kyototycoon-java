@@ -1,8 +1,5 @@
 package kyototycoon.http;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,35 +26,15 @@ public class HttpConnection {
         }
     }
 
-    private static final byte[] CRLF = "\r\n".getBytes();
-    private static final byte COLON = ':';
-    private static final byte SPACE = ' ';
-
     public HttpResponse execute(HttpRequest request) throws IOException {
         //send
-        ChannelBuffer sendBuffer = ChannelBuffers.dynamicBuffer();
-        sendBuffer.writeBytes(request.requestLine.method.getBytes());
-        sendBuffer.writeByte(SPACE);
-        sendBuffer.writeBytes(request.requestLine.uri.getBytes());
-        sendBuffer.writeByte(SPACE);
-        sendBuffer.writeBytes(request.requestLine.version.getBytes());
-        sendBuffer.writeBytes(CRLF);
-        for (Header header : request.headers) {
-            sendBuffer.writeBytes(header.name.getBytes());
-            sendBuffer.writeByte(COLON);
-            sendBuffer.writeByte(SPACE);
-            sendBuffer.writeBytes(header.value.getBytes());
-            sendBuffer.writeBytes(CRLF);
-        }
-        sendBuffer.writeBytes(CRLF);
-        if (request.body != null) {
-            sendBuffer.writeBytes(request.body);
-        }
-        sendBuffer.readBytes(send, sendBuffer.readableBytes());
+        HttpRequestEncoder encoder = new HttpRequestEncoder();
+        encoder.encode(request);
+        encoder.writeTo(send);
         //receive
         HttpResponseDecoder decoder = new HttpResponseDecoder();
         while (true) {
-            decoder.fill(recv);
+            decoder.readFrom(recv);
             HttpResponse response = decoder.decode();
             if (response != null) {
                 return response;
