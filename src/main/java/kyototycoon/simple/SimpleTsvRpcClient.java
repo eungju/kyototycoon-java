@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class SimpleTsvRpcClient implements TsvRpcClient {
     private URI address;
     private int timeout = 1000;
-    private TsvRpcConnection connection;
+    private ConnectionPool pool;
 
     public TsvRpcConnection getConnection() {
         try {
@@ -30,16 +30,23 @@ public class SimpleTsvRpcClient implements TsvRpcClient {
     }
 
     public void start() {
-        connection = getConnection();
+        pool = new ConnectionPool(this, 10);
     }
 
     public void stop() {
-        connection.close();
+        pool.dispose();
     }
 
     public TsvRpcResponse call(TsvRpcRequest request) {
-        synchronized (this) {
-            return connection.call(request);
+        TsvRpcConnection connection = pool.acquire();
+        try {
+            TsvRpcResponse response = connection.call(request);
+            pool.release(connection);
+            return response;
+        } catch (Exception e) {
+            pool.abandon(connection);
+            throw new RuntimeException(e);
         }
     }
+
 }
