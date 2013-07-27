@@ -11,18 +11,20 @@ import java.nio.charset.Charset;
 public class HttpResponseDecoder {
     private final ChannelBuffer buffer;
     private final Charset charset = Charset.defaultCharset();
+    private final int defaultBufferSize = 4 * 1024;
+    private byte[] readBuffer;
     private static final byte[] SP = " ".getBytes();
     private static final byte[] COLON = ":".getBytes();
     private static final byte[] CRLF = "\r\n".getBytes();
 
     public HttpResponseDecoder() {
-        this.buffer = ChannelBuffers.dynamicBuffer();
+        buffer = ChannelBuffers.dynamicBuffer(defaultBufferSize);
+        readBuffer = new byte[defaultBufferSize];
     }
 
     public void readFrom(InputStream input) throws IOException {
-        byte[] b = new byte[4 * 1024];
-        int n = input.read(b);
-        readFrom(b, 0, n);
+        int n = input.read(readBuffer);
+        readFrom(readBuffer, 0, n);
     }
 
     public void readFrom(byte[] input) {
@@ -41,6 +43,8 @@ public class HttpResponseDecoder {
             ChannelBuffer body = null;
             if (headers.hasContentLength()) {
                 if (buffer.readableBytes() < headers.getContentLength()) {
+                    //increase the reader buffer size to read whole body at one
+                    //go so that don't decode the response many times.
                     throw new UnderflowDecoderException();
                 }
                 body = ChannelBuffers.buffer(headers.getContentLength());
