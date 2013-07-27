@@ -30,7 +30,7 @@ public class SimpleTsvRpcClient implements TsvRpcClient {
     }
 
     public void start() {
-        pool = new ConnectionPool(this, 10);
+        pool = new ConnectionPool(this, 2, 4);
     }
 
     public void stop() {
