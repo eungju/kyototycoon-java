@@ -7,12 +7,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-public class HttpRequestEncoder {
+public class HttpRequestEncoder implements HttpMessageCoder {
     private final ChannelBuffer buffer;
     private final Charset charset = Charset.defaultCharset();
-    private static final byte[] SP = " ".getBytes();
-    private static final byte[] COLON = ":".getBytes();
-    private static final byte[] CRLF = "\r\n".getBytes();
 
     public HttpRequestEncoder() {
         buffer = ChannelBuffers.dynamicBuffer();

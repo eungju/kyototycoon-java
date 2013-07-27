@@ -8,14 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-public class HttpResponseDecoder {
+public class HttpResponseDecoder implements HttpMessageCoder {
     private final ChannelBuffer buffer;
     private final Charset charset = Charset.defaultCharset();
     private final int defaultBufferSize = 4 * 1024;
     private byte[] readBuffer;
-    private static final byte[] SP = " ".getBytes();
-    private static final byte[] COLON = ":".getBytes();
-    private static final byte[] CRLF = "\r\n".getBytes();
 
     public HttpResponseDecoder() {
         buffer = ChannelBuffers.dynamicBuffer(defaultBufferSize);
