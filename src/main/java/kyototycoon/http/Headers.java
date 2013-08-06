@@ -29,7 +29,7 @@ public class Headers implements Iterable<Header> {
 
     public Header getHeader(String name) {
         for (Header header : headers) {
-            if (header.name.equals(name)) {
+            if (header.name.equalsIgnoreCase(name)) {
                 return header;
             }
         }
@@ -46,5 +46,10 @@ public class Headers implements Iterable<Header> {
 
     public int getContentLength() {
         return getHeader("Content-Length").getValueAsInt();
+    }
+
+    public boolean isConnectionKeepAlive() {
+        Header header = getHeader("Connection");
+        return header != null && header.value.equalsIgnoreCase("Keep-Alive");
     }
 }

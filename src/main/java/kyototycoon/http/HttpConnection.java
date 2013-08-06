@@ -10,6 +10,7 @@ public class HttpConnection {
     private final Socket socket;
     private final OutputStream send;
     private final InputStream recv;
+    private boolean keepAlive;
 
     public HttpConnection(SocketAddress address, int timeout) throws Exception {
         socket = new Socket();
@@ -26,8 +27,13 @@ public class HttpConnection {
         }
     }
 
+    public boolean isKeepAlive() {
+        return keepAlive;
+    }
+
     public HttpResponse execute(HttpRequest request) throws IOException {
         //send
+        keepAlive = request.headers.isConnectionKeepAlive();
         HttpRequestEncoder encoder = new HttpRequestEncoder();
         encoder.encode(request);
         encoder.writeTo(send);
@@ -37,6 +43,7 @@ public class HttpConnection {
             decoder.readFrom(recv);
             HttpResponse response = decoder.decode();
             if (response != null) {
+                keepAlive = response.headers.isConnectionKeepAlive();
                 return response;
             }
         }
