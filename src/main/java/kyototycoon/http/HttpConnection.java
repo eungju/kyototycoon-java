@@ -31,20 +31,24 @@ public class HttpConnection {
         return keepAlive;
     }
 
-    public HttpResponse execute(HttpRequest request) throws IOException {
-        //send
-        HttpRequestEncoder encoder = new HttpRequestEncoder();
-        encoder.encode(request);
-        encoder.writeTo(send);
-        //receive
-        HttpResponseDecoder decoder = new HttpResponseDecoder();
-        while (true) {
-            decoder.readFrom(recv);
-            HttpResponse response = decoder.decode();
-            if (response != null) {
-                keepAlive = (response.statusLine.version.equals("HTTP/1.1") && !response.headers.hasHeader("Connection")) || response.headers.isConnectionKeepAlive();
-                return response;
+    public HttpResponse execute(HttpRequest request) throws HttpException {
+        try {
+            //send
+            HttpRequestEncoder encoder = new HttpRequestEncoder();
+            encoder.encode(request);
+            encoder.writeTo(send);
+            //receive
+            HttpResponseDecoder decoder = new HttpResponseDecoder();
+            while (true) {
+                decoder.readFrom(recv);
+                HttpResponse response = decoder.decode();
+                if (response != null) {
+                    keepAlive = (response.statusLine.version.equals("HTTP/1.1") && !response.headers.hasHeader("Connection")) || response.headers.isConnectionKeepAlive();
+                    return response;
+                }
             }
+        } catch (Exception e) {
+            throw new HttpException("Request failed: " + socket.getInetAddress().toString(), e);
         }
     }
 }

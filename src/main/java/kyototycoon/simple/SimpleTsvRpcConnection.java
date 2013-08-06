@@ -34,14 +34,14 @@ public class SimpleTsvRpcConnection implements TsvRpcConnection {
             TsvRpcResponse response = decode(httpResponse);
             logger.debug("Received a response: {}", response);
             return response;
-        } catch (IOException e) {
-            throw new RuntimeException("Error while calling " + request, e);
+        } catch (HttpException e) {
+            throw new RuntimeException("Call failed: " + request, e);
         }
     }
 
     public static HttpRequest encode(TsvRpcRequest request) {
         Headers headers = new Headers();
-        headers.addHeader("Connection", "keep-alive");
+        headers.addHeader("Connection", "Keep-Alive");
         TsvEncoding tsvEncoding = TsvEncodingHelper.forEfficiency(request.input);
         ChannelBuffer content = tsvEncoding.encode(request.input);
         headers.addHeader("Content-Type", tsvEncoding.contentType);
