@@ -11,14 +11,11 @@ import java.util.concurrent.TimeUnit;
 public class SimpleTsvRpcClient implements TsvRpcClient {
     private URI address;
     private int timeout = 1000;
-    private ObjectPool<TsvRpcConnection> pool;
+    private ObjectLifecycle<TsvRpcConnection> connectionLifecycle;
+    private ObjectPool<TsvRpcConnection> connectionPool;
 
     public TsvRpcConnection getConnection() {
-        try {
-            return new SimpleTsvRpcConnection(address, timeout);
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to create a connection", e);
-        }
+        return connectionLifecycle.create();
     }
 
     public void setHost(URI address) {
@@ -30,34 +27,41 @@ public class SimpleTsvRpcClient implements TsvRpcClient {
     }
 
     public void start() {
-        pool = new ObjectPool<TsvRpcConnection>(new ObjectLifecycle<TsvRpcConnection>() {
-            public TsvRpcConnection create() {
-                return getConnection();
-            }
-
-            public void destroy(TsvRpcConnection o) {
-                o.close();
-            }
-        }, 1, 10, timeout);
+        connectionLifecycle = new ConnectionLifecycle();
+        connectionPool = new ObjectPool<TsvRpcConnection>(connectionLifecycle, 1, 10, timeout);
     }
 
     public void stop() {
-        pool.dispose();
+        connectionPool.dispose();
     }
 
     public TsvRpcResponse call(TsvRpcRequest request) {
-        TsvRpcConnection connection = pool.acquire();
+        TsvRpcConnection connection = connectionPool.acquire();
         try {
             TsvRpcResponse response = connection.call(request);
             if (connection.isAlive()) {
-                pool.release(connection);
+                connectionPool.release(connection);
             } else {
-                pool.abandon(connection);
+                connectionPool.abandon(connection);
             }
             return response;
         } catch (Exception e) {
-            pool.abandon(connection);
+            connectionPool.abandon(connection);
             throw new RuntimeException(e);
+        }
+    }
+
+    class ConnectionLifecycle implements ObjectLifecycle<TsvRpcConnection> {
+        public TsvRpcConnection create() {
+            try {
+                return new SimpleTsvRpcConnection(address, timeout);
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to create a connection", e);
+            }
+        }
+
+        public void destroy(TsvRpcConnection o) {
+            o.close();
         }
     }
 }
