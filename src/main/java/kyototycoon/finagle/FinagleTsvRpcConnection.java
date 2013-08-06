@@ -13,4 +13,8 @@ public class FinagleTsvRpcConnection extends FinagleTsvRpc implements TsvRpcConn
     public void close() {
         service.release();
     }
+
+    public boolean isAlive() {
+        return service.isAvailable();
+    }
 }

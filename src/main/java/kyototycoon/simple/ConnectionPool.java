@@ -17,11 +17,13 @@ public class ConnectionPool {
     private final BlockingQueue<TsvRpcConnection> busy;
     private final int min;
     private final int max;
+    private final int timeout;
 
-    public ConnectionPool(TsvRpcClient factory, int min, int max) {
+    public ConnectionPool(TsvRpcClient factory, int min, int max, int timeout) {
         this.factory = factory;
         this.min = min;
         this.max = max;
+        this.timeout = timeout;
         idle = new LinkedBlockingQueue<TsvRpcConnection>();
         busy = new LinkedBlockingQueue<TsvRpcConnection>();
         for (int i = 0; i < min; i++) {
@@ -40,9 +42,9 @@ public class ConnectionPool {
             idle.add(factory.getConnection());
         }
         try {
-            TsvRpcConnection connection = idle.poll(1000, TimeUnit.MILLISECONDS);
+            TsvRpcConnection connection = idle.poll(timeout, TimeUnit.MILLISECONDS);
             if (connection == null) {
-                throw new RuntimeException();
+                throw new RuntimeException("All connections are busy");
             }
             busy.add(connection);
             return connection;

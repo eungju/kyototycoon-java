@@ -12,7 +12,7 @@ import java.net.URI;
 
 public class SimpleTsvRpcConnection implements TsvRpcConnection {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    protected HttpConnection connection;
+    private final HttpConnection connection;
 
     public SimpleTsvRpcConnection(URI address, int timeout) throws Exception {
         this.connection = new HttpConnection(new InetSocketAddress(address.getHost(), address.getPort()), timeout);
@@ -20,6 +20,10 @@ public class SimpleTsvRpcConnection implements TsvRpcConnection {
 
     public void close() {
         connection.close();
+    }
+
+    public boolean isAlive() {
+        return connection.isKeepAlive();
     }
 
     public TsvRpcResponse call(TsvRpcRequest request) {
@@ -31,7 +35,7 @@ public class SimpleTsvRpcConnection implements TsvRpcConnection {
             logger.debug("Received a response: {}", response);
             return response;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error while calling " + request, e);
         }
     }
 

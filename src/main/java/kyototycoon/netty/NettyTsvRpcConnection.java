@@ -28,6 +28,10 @@ public class NettyTsvRpcConnection implements TsvRpcConnection {
         channel.close().awaitUninterruptibly();
     }
 
+    public boolean isAlive() {
+        return true;
+    }
+
     public TsvRpcResponse call(TsvRpcRequest request) {
         TsvRpcCall call = new TsvRpcCall(request);
         channel.write(call);

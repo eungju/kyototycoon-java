@@ -33,7 +33,6 @@ public class HttpConnection {
 
     public HttpResponse execute(HttpRequest request) throws IOException {
         //send
-        keepAlive = request.headers.isConnectionKeepAlive();
         HttpRequestEncoder encoder = new HttpRequestEncoder();
         encoder.encode(request);
         encoder.writeTo(send);
@@ -43,7 +42,7 @@ public class HttpConnection {
             decoder.readFrom(recv);
             HttpResponse response = decoder.decode();
             if (response != null) {
-                keepAlive = response.headers.isConnectionKeepAlive();
+                keepAlive = (response.statusLine.version.equals("HTTP/1.1") && !response.headers.hasHeader("Connection")) || response.headers.isConnectionKeepAlive();
                 return response;
             }
         }

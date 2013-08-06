@@ -17,7 +17,7 @@ public class SimpleTsvRpcClient implements TsvRpcClient {
         try {
             return new SimpleTsvRpcConnection(address, timeout);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to create a connection", e);
         }
     }
 
@@ -30,7 +30,7 @@ public class SimpleTsvRpcClient implements TsvRpcClient {
     }
 
     public void start() {
-        pool = new ConnectionPool(this, 2, 4);
+        pool = new ConnectionPool(this, 1, 10, timeout);
     }
 
     public void stop() {
@@ -41,7 +41,11 @@ public class SimpleTsvRpcClient implements TsvRpcClient {
         TsvRpcConnection connection = pool.acquire();
         try {
             TsvRpcResponse response = connection.call(request);
-            pool.release(connection);
+            if (connection.isAlive()) {
+                pool.release(connection);
+            } else {
+                pool.abandon(connection);
+            }
             return response;
         } catch (Exception e) {
             pool.abandon(connection);
