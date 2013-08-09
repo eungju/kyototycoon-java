@@ -2,9 +2,9 @@ package kyototycoon.tsvrpc;
 
 public class TsvRpcRequest {
     public final String procedure;
-    public final Values input;
+    public final Assoc input;
 
-    public TsvRpcRequest(String procedure, Values input) {
+    public TsvRpcRequest(String procedure, Assoc input) {
         this.procedure = procedure;
         this.input = input;
     }

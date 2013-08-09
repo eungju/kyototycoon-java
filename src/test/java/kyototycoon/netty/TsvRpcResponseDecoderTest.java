@@ -1,7 +1,7 @@
 package kyototycoon.netty;
 
+import kyototycoon.tsvrpc.Assoc;
 import kyototycoon.tsvrpc.TsvRpcResponse;
-import kyototycoon.tsvrpc.Values;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -32,7 +32,7 @@ public class TsvRpcResponseDecoderTest {
         httpResponse.setContent(ChannelBuffers.wrappedBuffer("key\tvalue\r\n".getBytes()));
         TsvRpcResponse actual = (TsvRpcResponse) dut.decode(ctx, channel, httpResponse);
         assertThat(actual.status, is(200));
-        assertThat(actual.output, is(new Values().put("key".getBytes(), "value".getBytes())));
+        assertThat(actual.output, is(new Assoc().put("key".getBytes(), "value".getBytes())));
     }
 
     @Test public void skipIfTheMessageIsNotAnHttpResponse() throws Exception {

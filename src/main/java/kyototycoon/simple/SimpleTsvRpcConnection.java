@@ -6,7 +6,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 
@@ -56,7 +55,7 @@ public class SimpleTsvRpcConnection implements TsvRpcConnection {
         Headers headers = httpResponse.headers;
         TsvEncoding tsvEncoding = TsvEncodingHelper.forContentType(headers.getHeader("Content-Type").value);
         ChannelBuffer content = httpResponse.body;
-        Values output = tsvEncoding.decode(content);
+        Assoc output = tsvEncoding.decode(content);
         return new TsvRpcResponse(status.code, output);
     }
 }

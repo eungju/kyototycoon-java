@@ -2,11 +2,8 @@ package kyototycoon;
 
 import kyototycoon.transcoder.StringTranscoder;
 import kyototycoon.transcoder.Transcoder;
-import kyototycoon.tsvrpc.KeyValuePair;
-import kyototycoon.tsvrpc.TsvRpc;
-import kyototycoon.tsvrpc.TsvRpcRequest;
-import kyototycoon.tsvrpc.TsvRpcResponse;
-import kyototycoon.tsvrpc.Values;
+import kyototycoon.tsvrpc.*;
+import kyototycoon.tsvrpc.Assoc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +51,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public Map<String,String> report() {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("report", input));
         checkError(response);
@@ -66,7 +63,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public List<Object> playScript(String name, Map<Object, Object> entries) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         input.put("name".getBytes(), encodeStr(name));
         for (Map.Entry<Object, Object> entry : entries.entrySet()) {
@@ -96,7 +93,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public void tuneReplication(String host, int port, long ts, double iv) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         if (host != null && !host.isEmpty()) {
             input.put("host".getBytes(), encodeStr(host));
@@ -117,7 +114,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public Map<String,String> status() {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("status", input));
@@ -130,7 +127,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public void clear() {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         TsvRpcResponse response = tsvRpc.call(new TsvRpcRequest("clear", input));
@@ -142,7 +139,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public void synchronize(boolean hard, String command) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         input.put(Names.HARD, encodeStr(String.valueOf(hard)));
@@ -156,7 +153,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
     
     public void set(Object key, Object value, ExpirationTime xt) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -171,7 +168,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public void add(Object key, Object value, ExpirationTime xt) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -186,7 +183,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public void replace(Object key, Object value, ExpirationTime xt) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -201,7 +198,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public void append(Object key, Object value, ExpirationTime xt) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -216,7 +213,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public long increment(Object key, long num, IncrementOrigin orig, ExpirationTime xt) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -237,7 +234,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public double incrementDouble(Object key, double num, IncrementOrigin orig, ExpirationTime xt) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -258,7 +255,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public boolean cas(Object key, Object oval, Object nval, ExpirationTime xt) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -278,7 +275,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public boolean remove(Object key) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -291,7 +288,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public Object get(Object key) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -304,7 +301,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public Object seize(Object key) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setKeyParameter(input, key);
@@ -321,7 +318,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public long setBulk(Map<Object, Object> entries, ExpirationTime xt, boolean atomic) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         setExpirationTimeParameter(input, xt);
@@ -346,7 +343,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public long removeBulk(List<Object> keys, boolean atomic) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         if (atomic) {
@@ -369,7 +366,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public Map<Object, Object> getBulk(List<Object> keys, boolean atomic) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         if (atomic) {
@@ -405,7 +402,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public void vacuum(long step) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         if (step > 0) {
@@ -420,7 +417,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public List<Object> matchPrefix(Object prefix, long max) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         input.put(Names.PREFIX, keyTranscoder.encode(prefix));
@@ -449,7 +446,7 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
     }
 
     public List<Object> matchRegex(Object regex, long max) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setSignalParameters(input);
         setDbParameter(input);
         input.put(Names.REGEX, keyTranscoder.encode(regex));
@@ -487,27 +484,27 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         return new String(b);
     }
 
-    void setDbParameter(Values input) {
+    void setDbParameter(Assoc input) {
         if (target != null) {
             input.put(Names.DB, encodeStr(target));
         }
     }
 
-    void setKeyParameter(Values input, Object key) {
+    void setKeyParameter(Assoc input, Object key) {
         input.put(Names.KEY, keyTranscoder.encode(key));
     }
 
-    void setValueParameter(Values input, Object value) {
+    void setValueParameter(Assoc input, Object value) {
         input.put(Names.VALUE, valueTranscoder.encode(value));
     }
 
-    void setExpirationTimeParameter(Values input, ExpirationTime xt) {
+    void setExpirationTimeParameter(Assoc input, ExpirationTime xt) {
         if (xt.isEnabled()) {
             input.put(Names.XT, encodeStr(String.valueOf(xt.getValue())));
         }
     }
 
-    void setSignalParameters(Values input) {
+    void setSignalParameters(Assoc input) {
         if (signalWait.enabled) {
             input.put(Names.WAIT, encodeStr(signalWait.name));
             if (signalWait.timeout > 0) {
@@ -535,15 +532,15 @@ public abstract class SimpleKyotoTycoonRpc implements KyotoTycoonRpc {
         throw new KyotoTycoonException(message);
     }
 
-    Object getKeyParameter(Values output) {
+    Object getKeyParameter(Assoc output) {
         return keyTranscoder.decode(output.get(Names.KEY));
     }
 
-    Object getValueParameter(Values output) {
+    Object getValueParameter(Assoc output) {
         return valueTranscoder.decode(output.get(Names.VALUE));
     }
 
-    ExpirationTime getExpirationTimeParameter(Values output) {
+    ExpirationTime getExpirationTimeParameter(Assoc output) {
         byte[] bytes = output.get(Names.XT);
         if (bytes == null || bytes.length == 0) {
             return ExpirationTime.NONE;

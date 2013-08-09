@@ -1,8 +1,8 @@
 package kyototycoon;
 
+import kyototycoon.tsvrpc.Assoc;
 import kyototycoon.tsvrpc.TsvRpcRequest;
 import kyototycoon.tsvrpc.TsvRpcResponse;
-import kyototycoon.tsvrpc.Values;
 
 class SimpleCursor implements Cursor {
     private final SimpleKyotoTycoonConnection connection;
@@ -14,7 +14,7 @@ class SimpleCursor implements Cursor {
     }
 
     public void close() {
-        Values input = new Values();
+        Assoc input = new Assoc();
         setCursorParameter(input);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_delete", input));
         if (response.status != 450) {
@@ -28,7 +28,7 @@ class SimpleCursor implements Cursor {
     }
 
     public boolean jump(Object key) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         connection.setDbParameter(input);
         setCursorParameter(input);
@@ -48,7 +48,7 @@ class SimpleCursor implements Cursor {
     }
 
     public boolean jumpBack(Object key) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setDbParameter(input);
         connection.setSignalParameters(input);
         setCursorParameter(input);
@@ -64,7 +64,7 @@ class SimpleCursor implements Cursor {
     }
 
     public boolean step() {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         setCursorParameter(input);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_step", input));
@@ -76,7 +76,7 @@ class SimpleCursor implements Cursor {
     }
 
     public boolean stepBack() {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         setCursorParameter(input);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_step_back", input));
@@ -92,7 +92,7 @@ class SimpleCursor implements Cursor {
     }
 
     public boolean setValue(Object value, ExpirationTime xt, boolean step) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         setCursorParameter(input);
         input.put(SimpleKyotoTycoonRpc.Names.VALUE, connection.valueTranscoder.encode(value));
@@ -107,7 +107,7 @@ class SimpleCursor implements Cursor {
     }
 
     public boolean remove() {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         setCursorParameter(input);
         TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_remove", input));
@@ -123,7 +123,7 @@ class SimpleCursor implements Cursor {
     }
 
     public Object getKey(boolean step) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         setCursorParameter(input);
         setStepParameter(input, step);
@@ -141,7 +141,7 @@ class SimpleCursor implements Cursor {
     }
 
     public Object getValue(boolean step) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         setCursorParameter(input);
         setStepParameter(input, step);
@@ -158,7 +158,7 @@ class SimpleCursor implements Cursor {
     }
 
     public Record get(boolean step) {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         setCursorParameter(input);
         setStepParameter(input, step);
@@ -172,7 +172,7 @@ class SimpleCursor implements Cursor {
     }
 
     public Record seize() {
-        Values input = new Values();
+        Assoc input = new Assoc();
         connection.setSignalParameters(input);
         setCursorParameter(input);
         final TsvRpcResponse response = connection.tsvRpc.call(new TsvRpcRequest("cur_seize", input));
@@ -184,11 +184,11 @@ class SimpleCursor implements Cursor {
                 connection.getExpirationTimeParameter(response.output));
     }
 
-    void setCursorParameter(Values input) {
+    void setCursorParameter(Assoc input) {
         input.put(SimpleKyotoTycoonRpc.Names.CUR, connection.encodeStr(String.valueOf(id)));
     }
 
-    void setStepParameter(Values input, boolean step) {
+    void setStepParameter(Assoc input, boolean step) {
         if (step) {
             input.put(SimpleKyotoTycoonRpc.Names.STEP, new byte[0]);
         }

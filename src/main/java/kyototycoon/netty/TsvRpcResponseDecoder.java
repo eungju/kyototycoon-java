@@ -1,9 +1,9 @@
 package kyototycoon.netty;
 
+import kyototycoon.tsvrpc.Assoc;
 import kyototycoon.tsvrpc.TsvEncoding;
 import kyototycoon.tsvrpc.TsvEncodingHelper;
 import kyototycoon.tsvrpc.TsvRpcResponse;
-import kyototycoon.tsvrpc.Values;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -26,7 +26,7 @@ public class TsvRpcResponseDecoder extends OneToOneDecoder {
         HttpResponseStatus status = httpResponse.getStatus();
         TsvEncoding tsvEncoding = TsvEncodingHelper.forContentType(httpResponse.getHeader(HttpHeaders.Names.CONTENT_TYPE));
         ChannelBuffer content = httpResponse.getContent();
-        Values output = tsvEncoding.decode(content);
+        Assoc output = tsvEncoding.decode(content);
         return new TsvRpcResponse(status.getCode(), output);
     }
 }

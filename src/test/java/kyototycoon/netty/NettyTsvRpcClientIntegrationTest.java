@@ -1,8 +1,8 @@
 package kyototycoon.netty;
 
 import kyototycoon.KyotoTycoonFixture;
+import kyototycoon.tsvrpc.Assoc;
 import kyototycoon.tsvrpc.TsvRpcRequest;
-import kyototycoon.tsvrpc.Values;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,18 +21,18 @@ public class NettyTsvRpcClientIntegrationTest {
 
     @Test
     public void call() throws Exception {
-        dut.call(new TsvRpcRequest("void", new Values()));
+        dut.call(new TsvRpcRequest("void", new Assoc()));
     }
 
     @Test
     public void callTwice() throws Exception {
-        dut.call(new TsvRpcRequest("void", new Values()));
-        dut.call(new TsvRpcRequest("void", new Values()));
+        dut.call(new TsvRpcRequest("void", new Assoc()));
+        dut.call(new TsvRpcRequest("void", new Assoc()));
     }
 
     @Test
     public void callEcho() throws Exception {
-        Values input = new Values();
+        Assoc input = new Assoc();
         input.put("k1".getBytes(), "v1".getBytes());
         assertThat(dut.call(new TsvRpcRequest("echo", input)).output, is(input));
     }

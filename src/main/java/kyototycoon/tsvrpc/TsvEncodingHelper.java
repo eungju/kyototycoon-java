@@ -21,7 +21,7 @@ public class TsvEncodingHelper {
         throw new IllegalArgumentException("Unknown content type " + contentType);
     }
 
-    public static TsvEncoding forEfficiency(Values input) {
+    public static TsvEncoding forEfficiency(Assoc input) {
         return BASE64_TSV_ENCODING;
     }
 }

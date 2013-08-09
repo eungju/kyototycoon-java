@@ -15,7 +15,7 @@ public class TsvEncoding {
 
     static final byte[] COLUMN_SEPARATOR = new byte[] { '\t' };
     static final byte[] ROW_SEPARATOR = new byte[] { '\r', '\n' };
-    public ChannelBuffer encode(Values input) {
+    public ChannelBuffer encode(Assoc input) {
         try {
             ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
             for (KeyValuePair each : input) {
@@ -54,9 +54,9 @@ public class TsvEncoding {
         }
     };
 
-    public Values decode(ChannelBuffer input) {
+    public Assoc decode(ChannelBuffer input) {
         try {
-            Values result = new Values();
+            Assoc result = new Assoc();
             while (input.readable()) {
                 int ksize = input.bytesBefore(COLUMN_SEPARATOR_FINDER);
                 ksize = ksize == -1 ? input.readableBytes() : ksize;

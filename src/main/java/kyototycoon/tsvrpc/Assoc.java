@@ -5,15 +5,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class Values implements Iterable<KeyValuePair> {
+public class Assoc implements Iterable<KeyValuePair> {
     private final List<KeyValuePair> entries = new ArrayList<KeyValuePair>();
 
     private static final byte[] NONE = new byte[0];
-    public Values put(byte[] key) {
+    public Assoc put(byte[] key) {
         return put(key, NONE);
     }
 
-    public Values put(byte[] key, byte[] value) {
+    public Assoc put(byte[] key, byte[] value) {
         entries.add(new KeyValuePair(key, value));
         return this;
     }
@@ -36,9 +36,9 @@ public class Values implements Iterable<KeyValuePair> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Values values = (Values) o;
+        Assoc assoc = (Assoc) o;
         for (KeyValuePair entry : entries) {
-            if (!Arrays.equals(get(entry.key), (values.get(entry.key)))) {
+            if (!Arrays.equals(get(entry.key), (assoc.get(entry.key)))) {
                 return false;
             }
         }

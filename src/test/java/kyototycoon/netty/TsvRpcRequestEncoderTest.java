@@ -1,9 +1,9 @@
 package kyototycoon.netty;
 
+import kyototycoon.tsvrpc.Assoc;
 import kyototycoon.tsvrpc.TsvEncoding;
 import kyototycoon.tsvrpc.TsvEncodingHelper;
 import kyototycoon.tsvrpc.TsvRpcRequest;
-import kyototycoon.tsvrpc.Values;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
@@ -40,7 +40,7 @@ public class TsvRpcRequestEncoderTest {
     }
 
     @Test public void encode() throws Exception {
-        TsvRpcRequest request = new TsvRpcRequest("echo", new Values().put("key".getBytes(), "value".getBytes()));
+        TsvRpcRequest request = new TsvRpcRequest("echo", new Assoc().put("key".getBytes(), "value".getBytes()));
         HttpRequest actual = (HttpRequest) dut.encode(ctx, channel,  request);
 
         assertThat(actual.getMethod(), is(HttpMethod.POST));
