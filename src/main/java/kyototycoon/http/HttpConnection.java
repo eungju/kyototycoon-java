@@ -43,7 +43,7 @@ public class HttpConnection {
                 decoder.readFrom(recv);
                 HttpResponse response = decoder.decode();
                 if (response != null) {
-                    keepAlive = (response.statusLine.version.equals("HTTP/1.1") && !response.headers.hasHeader("Connection")) || response.headers.isConnectionKeepAlive();
+                    keepAlive = (response.statusLine.version.equals("HTTP/1.1") && !response.headers.hasConnection()) || response.headers.isConnectionKeepAlive();
                     return response;
                 }
             }

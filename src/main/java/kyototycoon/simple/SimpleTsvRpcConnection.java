@@ -40,11 +40,11 @@ public class SimpleTsvRpcConnection implements TsvRpcConnection {
 
     public static HttpRequest encode(TsvRpcRequest request) {
         Headers headers = new Headers();
-        headers.addHeader("Connection", "Keep-Alive");
+        headers.setConnection("Keep-Alive");
         TsvEncoding tsvEncoding = TsvEncodingHelper.forEfficiency(request.input);
         ChannelBuffer content = tsvEncoding.encode(request.input);
-        headers.addHeader("Content-Type", tsvEncoding.contentType);
-        headers.addHeader("Content-Length", String.valueOf(content.readableBytes()));
+        headers.setContentType(tsvEncoding.contentType);
+        headers.setContentLength(content.readableBytes());
         HttpRequest httpRequest = new HttpRequest(new RequestLine("POST", "/rpc/" + request.procedure, "HTTP/1.1"), headers, content);
         return httpRequest;
     }
@@ -53,7 +53,7 @@ public class SimpleTsvRpcConnection implements TsvRpcConnection {
     public static TsvRpcResponse decode(HttpResponse httpResponse) {
         StatusLine status = httpResponse.statusLine;
         Headers headers = httpResponse.headers;
-        TsvEncoding tsvEncoding = TsvEncodingHelper.forContentType(headers.getHeader("Content-Type").value);
+        TsvEncoding tsvEncoding = TsvEncodingHelper.forContentType(headers.getContentType());
         ChannelBuffer content = httpResponse.body;
         Assoc output = tsvEncoding.decode(content);
         return new TsvRpcResponse(status.code, output);

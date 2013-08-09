@@ -48,8 +48,28 @@ public class Headers implements Iterable<Header> {
         return getHeader("Content-Length").getValueAsInt();
     }
 
+    public void setContentLength(int value) {
+        addHeader("Content-Length", String.valueOf(value));
+    }
+
+    public String getContentType() {
+        return getHeader("Content-Type").value;
+    }
+
+    public void setContentType(String value) {
+        addHeader("Content-Type", value);
+    }
+
+    public boolean hasConnection() {
+        return hasHeader("Connection");
+    }
+
     public boolean isConnectionKeepAlive() {
         Header header = getHeader("Connection");
         return header != null && header.value.equalsIgnoreCase("Keep-Alive");
+    }
+
+    public void setConnection(String value) {
+        addHeader("Connection", value);
     }
 }
