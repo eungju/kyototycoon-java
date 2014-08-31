@@ -1,0 +1,17 @@
+target
+
+.classpath
+.project
+.settings
+
+.idea
+*.iml
+*.ipr
+*.iws
+
+infinitest.log*
+
+.DS_Store
+*~
+.#*
+
