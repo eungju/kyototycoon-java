@@ -69,6 +69,6 @@ public class TsvEncodingTest {
         }
         watch.stop();
         System.out.println("Elapsed: " + watch.elapsed());
-        assertThat(watch.elapsed(), lessThan(100L));
+        assertThat(watch.elapsed(), lessThan(200L));
     }
 }
