@@ -6,7 +6,8 @@ jdk:
   - openjdk6
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y kyototycoon
+  - wget http://cdimage.debian.org/ubuntu/ubuntu/pool/universe/k/kyototycoon/kyototycoon_0.9.56-1_amd64.deb
+  - sudo dpkg -i kyototycoon_0.9.56-1_amd64.deb
 script:
   - ktserver -dmn '+' '-'
   - mvn test
