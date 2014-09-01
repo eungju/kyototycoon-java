@@ -7,6 +7,10 @@ jdk:
 before_install:
   - sudo apt-get update -qq
   - wget http://cdimage.debian.org/ubuntu/ubuntu/pool/universe/k/kyototycoon/kyototycoon_0.9.56-1_amd64.deb
+  - wget http://cdimage.debian.org/ubuntu/ubuntu/pool/universe/k/kyototycoon/libkyototycoon2_0.9.56-1_amd64.deb
+  - wget http://cdimage.debian.org/ubuntu/ubuntu/pool/universe/l/lua5.1/lua5.1_5.1.5-5_amd64.deb
+  - sudo dpkg -i lua5.1_5.1.5-5_amd64.deb
+  - sudo dpkg -i libkyototycoon2_0.9.56-1_amd64.deb
   - sudo dpkg -i kyototycoon_0.9.56-1_amd64.deb
 script:
   - ktserver -dmn '+' '-'
