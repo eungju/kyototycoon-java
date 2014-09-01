@@ -6,7 +6,7 @@ jdk:
   - openjdk6
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y liblzo2-2
+  - sudo apt-get install -y liblzo2-2 liblzma5
   - wget http://cdimage.debian.org/ubuntu/ubuntu/pool/universe/k/kyototycoon/kyototycoon_0.9.56-1_amd64.deb
   - wget http://cdimage.debian.org/ubuntu/ubuntu/pool/universe/k/kyototycoon/libkyototycoon2_0.9.56-1_amd64.deb
   - wget http://cdimage.debian.org/ubuntu/ubuntu/pool/universe/k/kyotocabinet/libkyotocabinet16_1.2.76-4_amd64.deb
