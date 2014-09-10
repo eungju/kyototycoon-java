@@ -1,6 +1,6 @@
 package kyototycoon;
 
-import kyototycoon.finagle.FinagleTsvRpcClient;
+import kyototycoon.simple.SimpleTsvRpcClient;
 import kyototycoon.tsvrpc.TsvRpcClient;
 
 import java.net.URI;
@@ -13,7 +13,7 @@ public class SimpleKyotoTycoonClient extends SimpleKyotoTycoonRpc implements Kyo
     private final TsvRpcClient client;
 
     public SimpleKyotoTycoonClient() {
-        this(new FinagleTsvRpcClient());
+        this(new SimpleTsvRpcClient());
     }
     
     public SimpleKyotoTycoonClient(TsvRpcClient client) {

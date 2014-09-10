@@ -10,22 +10,22 @@
     <description>
         This module implements the pure Java client which connects to the server of Kyoto Tycoon and speaks its TSV-RPC protocol.
     </description>
-    <url>http://code.google.com/p/kyototycoon-java</url>
+    <url>https://github.com/eungju/kyototycoon-java</url>
 
     <scm>
-      <connection>scm:hg:https://bitbucket.org/EP/kyototycoon-java</connection>
-      <developerConnection>scm:hg:ssh://hg@bitbucket.org/EP/kyototycoon-java</developerConnection>
-      <url>https://bitbucket.org/EP/kyototycoon-java</url>
+      <connection>scm:git:https://github.com/eungju/kyototycoon-java.git</connection>
+      <developerConnection>scm:git:ssh://git@github.com:eungju/kyototycoon-java.git</developerConnection>
+      <url>https://github.com/eungju/kyototycoon-java</url>
     </scm>
 
     <issueManagement>
-        <url>http://code.google.com/p/kyototycoon-java/issues/</url>
+        <url>https://github.com/eungju/kyototycoon-java/issues</url>
     </issueManagement>
 
     <developers>
         <developer>
             <id>eungju</id>
-            <name>Eungju PARK</name>
+            <name>Park Eung-ju</name>
         </developer>
     </developers>
 
@@ -43,20 +43,19 @@
             <version>1.5</version>
         </dependency>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+            <version>3.9.4.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>13.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.twitter</groupId>
-            <artifactId>finagle-core</artifactId>
-            <version>5.3.22</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twitter</groupId>
-            <artifactId>finagle-http</artifactId>
-            <version>5.3.22</version>
         </dependency>
 
         <dependency>
